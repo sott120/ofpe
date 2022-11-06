@@ -9,6 +9,8 @@ import styled from "styled-components";
 import axios from "axios";
 import { useState } from 'react';
 
+const ip = process.env.REACT_APP_ip;
+
 let LoginBox = styled.section`
     max-width: 500px;
     width: 100%;
@@ -94,7 +96,7 @@ function App() {
       <>
           <Login />
 
-          {/* <button
+          <button
               onClick={() => {
                 SetAct(()=> !act)
                   axios
@@ -111,7 +113,25 @@ function App() {
               }}
           >
               TEST
-          </button> */}
+          </button>
+          <button
+              onClick={() => {
+                SetAct(()=> !act)
+                  axios
+                      .post( ip + "/api/test", {
+                          firstName: "Fred",
+                          lastName: "Flintstone",
+                      })
+                      .then(function (response) {
+                          console.log(response);
+                      })
+                      .catch(function (error) {
+                          console.log(error);
+                      });
+              }}
+          >
+              TEST
+          </button>
       </>
   );
 
