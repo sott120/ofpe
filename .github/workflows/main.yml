@@ -1,0 +1,40 @@
+name : ofpe deployment
+on:
+  push:
+    branches:
+    - main
+jobs:
+  build:
+    name: git pull
+    runs-on: ubuntu-latest
+    steps:
+    - name : git pull
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER_NAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          sudo su
+          cd ofpe
+          sudo git pull
+          npm i
+          npm run build
+    
+    - name: nginx mysql restart
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER_NAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          sudo systemctl stop nginx
+          sudo systemctl stop mysqld
+          sudo systemctl start nginx
+          sudo systemctl start mysqld
+      
+          cd ofpe
+          npx pm2 stop server
+          npx pm2 start server/server.ts
