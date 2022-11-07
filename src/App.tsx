@@ -112,7 +112,7 @@ function App() {
                       });
               }}
           >
-              TEST
+              TEST1
           </button>
           <button
               onClick={() => {
@@ -130,7 +130,7 @@ function App() {
                       });
               }}
           >
-              TEST
+              TEST2
           </button>
       </>
   );
