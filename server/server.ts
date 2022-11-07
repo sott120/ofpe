@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import db from "./db.js";
 import cors from "cors";
+import { send } from "process";
 
 const app = express();
 app.use(cors())
@@ -19,6 +20,9 @@ app.post('/api/test', (req,res) => {
     })
 })
 
+app.get('/',(req,res) =>{
+    res.send('ㅋㅋ')
+})
 
 app.listen(8080,()=>{
     console.log("열림zzz")
