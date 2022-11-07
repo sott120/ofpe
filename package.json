@@ -31,7 +31,7 @@
         "web-vitals": "^2.1.4"
     },
     "scripts": {
-        "build":"react-scripts build",
+        "build": "react-scripts build",
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "react-scripts start",
         "dev": "nodemon --exec node --loader ts-node/esm server/server.ts"
@@ -58,6 +58,7 @@
         "@types/cors": "^2.8.12",
         "@types/styled-components": "^5.1.26",
         "nodemon": "^2.0.20",
+        "pm2": "^5.2.2",
         "ts-node": "^10.9.1"
     }
 }
