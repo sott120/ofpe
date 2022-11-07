@@ -21,7 +21,7 @@ app.post('/api/test', (req,res) => {
 })
 
 app.get('/',(req,res) =>{
-    res.send('ㅋㅋ')
+    res.send('안녕하세요')
 })
 
 app.listen(8080,()=>{
