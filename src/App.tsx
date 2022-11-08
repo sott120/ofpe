@@ -71,7 +71,7 @@ const Login = () => {
                       <Form.Control type="password" placeholder="비밀번호" />
                   </FloatingLabel>
                   <Form.Text className="text-muted">
-                      비밀번호가 일치하지 않습니다.
+                      비밀번호가 일치하지 않습니다.ㅁ
                   </Form.Text>
                   <Form.Group className="mb-3" controlId="formBasicCheckbox">
                       <Form.Check
