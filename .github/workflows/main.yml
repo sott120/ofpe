@@ -20,6 +20,7 @@ jobs:
           cd ofpe
           sudo git pull
           npm i
+          npm prune
           npm run build
     
     - name: nginx mysql restart
