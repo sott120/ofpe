@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Nav, Navbar, Button, Row, Col } from "react-bootstrap";
+import { Container, Nav, Navbar, Button, Modal, Form } from "react-bootstrap";
 import styled from "styled-components";
 import GlobalStyles from "./GlobalStyles";
 import axios from "axios";
@@ -12,12 +12,11 @@ import { prototype } from "stream";
 const breakpointColumnsObj = {
     default: 4,
     1199: 3,
-    767: 2,
-    500: 1,
+    830: 2,
+    575: 1,
 };
 
 const CustomMasonry = styled(Masonry)`
-    margin-top: 1.5rem;
     &.my-masonry-grid {
         display: -webkit-box; /* Not needed if autoprefixing */
         display: -ms-flexbox; /* Not needed if autoprefixing */
@@ -31,7 +30,11 @@ const CustomMasonry = styled(Masonry)`
 `;
 
 const Figure = styled.div`
-    padding: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px;
+    margin-bottom: 20px;
     position: relative;
     & img {
         width: 100%;
@@ -44,14 +47,65 @@ const Figure = styled.div`
     }
 `;
 
+const ModalInner = styled.div`
+    display: flex;
+    height: 80vh;
+    & section:first-child {
+        flex: 6;
+    }
+    & section:last-child {
+        flex: 4;
+        padding-left: 10px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content:space-between;
+    }
+    & section > img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        background-color: #ececec;
+    }
+    & article {
+        padding: 0 10px;
+        border-bottom: 1px solid #ececec;
+    }
+`;
 
+const FormControl = styled(Form.Control)`
+    width: 100%;
+    height: 50px;
+    border: none;
+    resize: none;
+    &:focus{
+        outline: none;
+    }
+`
+
+const ModalT = styled.article`
+    & > div{
+        display: flex;
+    }
+`
+
+const ModalM = styled.article``;
+
+const ModalCont = styled.article``;
+
+const ModalLi = styled.article``;
+
+const ModalFt = styled.article`
+
+`
 
 const Main = () => {
     let navigate = useNavigate();
+    const [lgShow, setLgShow] = useState(false);
     return (
         <>
             <Navbar expand="sm" bg="dark" variant="dark" sticky="top">
-                <Container>
+                <Container className="ps-4 pe-4">
                     <Navbar.Brand
                         onClick={() => {
                             navigate("/");
@@ -59,7 +113,6 @@ const Main = () => {
                     >
                         OFPE
                     </Navbar.Brand>
-
                     <Nav className="me-auto">
                         {/* <Nav.Link onClick={()=>{navigate(-1)}}>뒤로가기</Nav.Link> */}
                         {/* <Link className="nav_link" to="/">Home</Link>
@@ -89,13 +142,81 @@ const Main = () => {
                     </Nav>
                 </Container>
             </Navbar>
+            <Modal
+                size="xl"
+                show={lgShow}
+                onHide={() => setLgShow(false)}
+                aria-labelledby="example-modal-sizes-title-lg"
+                className="mt-5"
+            >
+                <Modal.Body>
+                    <ModalInner>
+                        <section>
+                            <img
+                                src="/image/login_bg.jpg"
+                                alt=""
+                                width="100%"
+                            />
+                        </section>
+                        <section>
+                            <div>
+                                <ModalT>
+                                    <div>
+                                        <h4>제목</h4>
+                                        <span>업로드날짜</span>
+                                        <span>like</span>
+                                    </div>
+                                    <p>이름</p>
+                                </ModalT>
+                                <ModalM>
+                                    <p>촬영날짜</p>
+                                    <p>장소</p>
+                                    <div>
+                                        <img src="/image/null.png" alt="" />
+                                    </div>
+                                </ModalM>
+                                <ModalCont>
+                                    내용이 적혀있습니다아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ
+                                </ModalCont>
+                            </div>
+                            <div>
+                                <ModalLi>
+                                    <ul>
+                                        <li>
+                                            <p>닉네임</p>
+                                            <p>댓글 내용</p>
+                                        </li>
+                                        <li>
+                                            <p>닉네임</p>
+                                            <p>댓글 내용</p>
+                                        </li>
+                                        <li>
+                                            <p>닉네임</p>
+                                            <p>댓글 내용</p>
+                                        </li>
+                                    </ul>
+                                </ModalLi>
+                                <ModalFt>
+                                    <FormControl
+                                        as="textarea"
+                                        placeholder="댓글 달기..."
+                                    />
+                                    <Button variant="dark" disabled>
+                                        게시
+                                    </Button>
+                                </ModalFt>
+                            </div>
+                        </section>
+                    </ModalInner>
+                </Modal.Body>
+            </Modal>
             <Container>
                 <CustomMasonry
-                    className="my-masonry-grid"
+                    className="my-masonry-grid mt-4"
                     columnClassName="my-masonry-grid_column"
                     breakpointCols={breakpointColumnsObj}
                 >
-                    <Figure>
+                    <Figure onClick={() => setLgShow(true)}>
                         <img src="/image/login_bg.jpg" alt="" />
                         <figcaption>1번</figcaption>
                     </Figure>
