@@ -1,13 +1,16 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Nav, Navbar, Button, Modal, Form } from "react-bootstrap";
+import { Container, Button, Modal, Form } from "react-bootstrap";
 import styled from "styled-components";
 import GlobalStyles from "./GlobalStyles";
 import axios from "axios";
 import { useState, useRef } from 'react';
 import {Login, Join} from './Pages/LoginJoin';
+import Write from './Pages/Write';
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 import Masonry from "react-masonry-css";
 import { prototype } from "stream";
+import Layout from "./layout/Layout";
+import LayoutNotHeader from "./layout/LayoutNotHeader";
 
 const breakpointColumnsObj = {
     default: 4,
@@ -52,6 +55,9 @@ const ModalInner = styled.div`
 
     @media screen and (max-width: 991px) {
         flex-direction: column;
+        & section:last-child {
+            margin-top: 10px;
+        }
     }
     & section:first-child {
         flex: 6;
@@ -117,20 +123,15 @@ const ModalM = styled.article`
 `;
 
 const ModalCont = styled.article`
-    & > p{
-        display: block;
-        overflow: auto;
-        max-height: 15vh;
-        min-height: 20px;
+    overflow: auto;
+    max-height: 30vh;
+    min-height: 15vh;
+    & > div {
         margin: 20px 0;
     }
-`;
-
-const ModalLi = styled.article`
     & ul {
         display: block;
-        overflow: auto;
-        height: 10vh;
+        border-top: 1px solid #ececec;
     }
     & ul > li {
         display: flex;
@@ -149,6 +150,7 @@ const ModalLi = styled.article`
     }
 `;
 
+
 const ModalFt = styled.article`
     display: flex;
     margin: 20px 0 !important;
@@ -156,54 +158,15 @@ const ModalFt = styled.article`
 `;
 
 const Main = () => {
-    let navigate = useNavigate();
     const [lgShow, setLgShow] = useState(false);
     return (
         <>
-            <Navbar expand="sm" bg="dark" variant="dark" sticky="top">
-                <Container className="ps-4 pe-4">
-                    <Navbar.Brand
-                        onClick={() => {
-                            navigate("/");
-                        }}
-                    >
-                        OFPE
-                    </Navbar.Brand>
-                    <Nav className="me-auto">
-                        {/* <Nav.Link onClick={()=>{navigate(-1)}}>뒤로가기</Nav.Link> */}
-                        {/* <Link className="nav_link" to="/">Home</Link>
-                        <Link className="nav_link" to="/detail">Detail</Link> */}
-                    </Nav>
-                    <Nav>
-                        {/* <Nav.Link
-                            onClick={() => {
-                                navigate("/");
-                            }}
-                        >
-                            박소연
-                        </Nav.Link>
-                        <Nav.Link disabled>
-                            님, 오늘의 사진은 어떠셨나요?
-                        </Nav.Link>
-                        */}
-                        <Button
-                            className="ms-3"
-                            onClick={() => {
-                                navigate("/");
-                            }}
-                            variant="warning"
-                        >
-                            찰칵!
-                        </Button>
-                    </Nav>
-                </Container>
-            </Navbar>
+            {/* <Header/> */}
             <Modal
                 size="xl"
                 show={lgShow}
                 onHide={() => setLgShow(false)}
                 aria-labelledby="example-modal-sizes-title-lg"
-                className="mt-5"
             >
                 <Modal.Body>
                     <ModalInner>
@@ -245,13 +208,9 @@ const Main = () => {
                                     </div>
                                 </ModalM>
                                 <ModalCont>
-                                    <p>
+                                    <div>
                                         내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이
-                                    </p>
-                                </ModalCont>
-                            </div>
-                            <div>
-                                <ModalLi>
+                                    </div>
                                     <ul>
                                         <li>
                                             <p className="comment_writer">
@@ -281,7 +240,9 @@ const Main = () => {
                                             </div>
                                         </li>
                                     </ul>
-                                </ModalLi>
+                                </ModalCont>
+                            </div>
+                            <div>
                                 <ModalFt>
                                     <FormControl
                                         as="textarea"
@@ -346,12 +307,25 @@ function App() {
    const [act,SetAct] = useState<boolean | null>(null)
 
   return (
-        <>
-            <GlobalStyles />
-            {/* <Login/>
+      <>
+          <GlobalStyles />
+          {/* <Login/>
             <Join /> */}
-            <Main />
-            {/* <button
+          <Routes>
+              <Route element={<Layout />}>
+                  {/* <Write />
+                  <Main /> */}
+                  <Route path="/" element={<Main />}></Route>
+                  <Route path="/write" element={<Write />}></Route>
+              </Route>
+              <Route element={<LayoutNotHeader />}>
+                  {/* <Write />
+                  <Main /> */}
+                  <Route path="/login" element={<Login />}></Route>
+              </Route>
+          </Routes>
+
+          {/* <button
                 onClick={() => {
                   SetAct(()=> !act)
                     axios
@@ -387,7 +361,7 @@ function App() {
           >
               TEST2
             </button> */}
-        </>
+      </>
   );
 
 }
