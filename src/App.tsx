@@ -49,7 +49,10 @@ const Figure = styled.div`
 
 const ModalInner = styled.div`
     display: flex;
-    height: 80vh;
+
+    @media screen and (max-width: 991px) {
+        flex-direction: column;
+    }
     & section:first-child {
         flex: 6;
     }
@@ -59,7 +62,7 @@ const ModalInner = styled.div`
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
-        justify-content:space-between;
+        justify-content: space-between;
     }
     & section > img {
         width: 100%;
@@ -84,20 +87,73 @@ const FormControl = styled(Form.Control)`
 `
 
 const ModalT = styled.article`
+    & > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    & p {
+        font-size: 14px;
+        color: #888;
+    }
+    & > p {
+        font-size: 16px;
+        margin: 10px 0;
+    }
+`;
+
+const ModalM = styled.article`
+    & > p{
+        margin: 10px 0;
+    }
+    & > p > span{
+        font-weight: bold;
+        padding-right: 10px;
+    }
     & > div{
         display: flex;
+        align-items: center;
     }
-`
+`;
 
-const ModalM = styled.article``;
+const ModalCont = styled.article`
+    & > p{
+        display: block;
+        overflow: auto;
+        max-height: 15vh;
+        min-height: 20px;
+        margin: 20px 0;
+    }
+`;
 
-const ModalCont = styled.article``;
-
-const ModalLi = styled.article``;
+const ModalLi = styled.article`
+    & ul {
+        display: block;
+        overflow: auto;
+        height: 10vh;
+    }
+    & ul > li {
+        display: flex;
+        margin: 20px 0;
+    }
+    & .comment_writer {
+        padding-right: 20px;
+        font-weight: bold;
+    }
+    & .comment_cont > p {
+        padding-bottom: 10px;
+    }
+    & .comment_cont > span {
+        font-size: 14px;
+        color: #888;
+    }
+`;
 
 const ModalFt = styled.article`
-
-`
+    display: flex;
+    margin: 20px 0 !important;
+    border: none !important;
+`;
 
 const Main = () => {
     let navigate = useNavigate();
@@ -163,36 +219,66 @@ const Main = () => {
                                 <ModalT>
                                     <div>
                                         <h4>제목</h4>
-                                        <span>업로드날짜</span>
-                                        <span>like</span>
+                                        <p>
+                                            업로드날짜
+                                            <span>라이크</span>
+                                        </p>
                                     </div>
                                     <p>이름</p>
                                 </ModalT>
                                 <ModalM>
-                                    <p>촬영날짜</p>
-                                    <p>장소</p>
+                                    <p>
+                                        <span>촬영날짜</span>
+                                        2022.11.11
+                                    </p>
+                                    <p>
+                                        <span>촬영장소</span>
+                                        성수연방
+                                    </p>
+                                    <p>
+                                        <span>카메라</span>
+                                        도란나
+                                    </p>
                                     <div>
-                                        <img src="/image/null.png" alt="" />
+                                        <img src="/image/buam.png" alt="" />
+                                        <p>Buam64</p>
                                     </div>
                                 </ModalM>
                                 <ModalCont>
-                                    내용이 적혀있습니다아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ
+                                    <p>
+                                        내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이내용이
+                                    </p>
                                 </ModalCont>
                             </div>
                             <div>
                                 <ModalLi>
                                     <ul>
                                         <li>
-                                            <p>닉네임</p>
-                                            <p>댓글 내용</p>
+                                            <p className="comment_writer">
+                                                닉네임
+                                            </p>
+                                            <div className="comment_cont">
+                                                <p>댓글 내용</p>
+                                                <span>2022.11.11</span>
+                                            </div>
                                         </li>
                                         <li>
-                                            <p>닉네임</p>
-                                            <p>댓글 내용</p>
+                                            <p className="comment_writer">
+                                                닉네임
+                                            </p>
+                                            <div className="comment_cont">
+                                                <p>댓글 내용</p>
+                                                <span>2022.11.11</span>
+                                            </div>
                                         </li>
                                         <li>
-                                            <p>닉네임</p>
-                                            <p>댓글 내용</p>
+                                            <p className="comment_writer">
+                                                닉네임
+                                            </p>
+                                            <div className="comment_cont">
+                                                <p>댓글 내용</p>
+                                                <span>2022.11.11</span>
+                                            </div>
                                         </li>
                                     </ul>
                                 </ModalLi>
