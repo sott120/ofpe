@@ -43,7 +43,7 @@ const Header = () => {
                         }}
                         variant="warning"
                     >
-                        찰칵!
+                        전시하기
                     </Button>
                 </Nav>
             </Container>
