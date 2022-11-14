@@ -29,6 +29,18 @@ const LoginBox = styled.section<LoginBoxItf>`
     background-color: rgba(0, 0, 0, ${(props) => props.boxOpacity}%);
     text-align: ${(props) => props.textAlign};
     color: white;
+    & > h1{
+        font-size: 0;
+    }
+    & > h1 >img{
+        width: 80px;
+        height: 80px;
+        margin-bottom: 10px;
+    }
+    & > h3 > span{
+        display: block;
+        margin-bottom: 5px;
+    }
 `;
 
 const FormTxt = styled(Form.Text)`
@@ -63,8 +75,10 @@ const Login = ({ boxOpacity, textAlign }: LoginBoxItf) => {
     return (
         <LoginWrap>
             <LoginBox boxOpacity={60} textAlign={"center"}>
-                <h1 className="mb-3">OFPE</h1>
-                <h3 className="mb-5">우리들의 필름 사진전</h3>
+                <h1 className="mb-3">OFPE
+                    <img src="./image/ofpe_logo.png" alt="오프 로고이미지" />
+                </h1>
+                <h3 className="mb-5"><span>OFPE</span>우리들의 필름 사진전</h3>
                 <Form>
                     <FloatingLabel
                         controlId="floatingInput"
@@ -115,12 +129,15 @@ const Join = ({ boxOpacity, textAlign }: LoginBoxItf) => {
     return (
         <LoginWrap>
             <LoginBox boxOpacity={100} textAlign={"left"}>
-                <h1 className="mb-3">OFPE</h1>
+                <h1 className="mb-3">
+                    OFPE
+                    <img src="./image/ofpe_logo.png" alt="오프 로고이미지" />
+                </h1>
                 <h3 className="mb-5">회원가입</h3>
                 <Form>
                     <Form.Group className="mb-3">
                         <Form.Label>아이디</Form.Label>
-                        <Form.Control name="userName" type="text"/>
+                        <Form.Control name="userName" type="text" />
                         <FormTxt className="invalid-feedback">
                             아이디를 입력해주세요
                         </FormTxt>
