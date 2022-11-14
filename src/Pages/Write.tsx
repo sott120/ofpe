@@ -18,7 +18,7 @@ const ImgPreview = styled.div<ImgDisplayItf>`
     width: 516px;
     height: 300px;
     position: relative;
-    background-color: #000;
+    background-color: #ececec;
     margin: 10px 0;
     cursor: pointer;
     @media screen and (max-width: 575px) {
@@ -58,7 +58,41 @@ const Write = () => {
     const [imgBase64, setImgBase64] = useState(""); // 파일 base64
     const [imgFile, setImgFile] = useState(null); //파일
     const [selectOption, setSelectOption] = useState("");
+    
     const imgInput = useRef() as RefObject<HTMLInputElement>;
+    const photoName = useRef() as RefObject<HTMLInputElement>;
+    const photoDate = useRef() as RefObject<HTMLInputElement>;
+    const photoPlace = useRef() as RefObject<HTMLInputElement>;
+    const usedCamera = useRef() as RefObject<HTMLInputElement>;
+    const usedFilm = useRef() as RefObject<HTMLSelectElement>;
+    const otherFilm = useRef() as RefObject<HTMLInputElement>;
+    const write = useRef() as RefObject<HTMLFormElement>;
+
+    const allChk = ()=>{
+        if (imgInput.current!.value === "") {
+            alert("사진을 골라주세요.");
+            imgInput.current!.focus();
+        } else if (photoName.current!.value === "") {
+            alert("작품 이름을 적어주세요.");
+            photoName.current!.focus();
+        } else if (photoDate.current!.value === "") {
+            alert("촬영 날짜를 설정해주세요.");
+            photoDate.current!.focus();
+        } else if (photoPlace.current!.value === "") {
+            alert("촬영 장소를 적어주세요.");
+            photoPlace.current!.focus();
+        } else if (usedCamera.current!.value === "") {
+            alert("시용한 카메라 기종을 적어주세요.");
+            usedCamera.current!.focus();
+        } else if (usedFilm.current!.value === "") {
+            alert("사용한 필름을 선택해주세요.");
+            usedFilm.current!.focus();
+        } else {
+           write.current!.submit();
+        }
+    }
+
+    
     const handleChangeFile = (event:any) => {
         let reader = new FileReader();
         reader.onloadend = () => {
@@ -73,12 +107,14 @@ const Write = () => {
             setImgFile(event.target.files[0]); // 파일 상태 업데이트
         }
     };
+    
+
 
     return (
         <Container>
-            <Form2 className="mt-5 mb-5">
-                <Form.Group controlId="formFile" className="mb-4">
-                    <Form.Label>사진을 한 장 골라주세요</Form.Label>
+            <Form2 ref={write} className="mt-5 mb-5">
+                <Form.Group className="mb-4">
+                    <Form.Label>필름카메라로 찍은 사진을 올려주세요.</Form.Label>
                     <ImgPreview
                         imgBase64={imgBase64}
                         onClick={() => {
@@ -93,25 +129,42 @@ const Write = () => {
                         onChange={handleChangeFile}
                     />
                 </Form.Group>
-                <Form.Group className="mb-4" controlId="formBasicEmail">
+                <Form.Group className="mb-4">
                     <Form.Label>작품 이름</Form.Label>
-                    <Form.Control type="text" placeholder="작품 이름" />
+                    <Form.Control
+                        ref={photoName}
+                        type="text"
+                        placeholder="작품 이름"
+                    />
                 </Form.Group>
-                <Form.Group className="mb-4" controlId="formBasicPassword">
+                <Form.Group className="mb-4">
                     <Form.Label>촬영일</Form.Label>
-                    <Form.Control type="date" placeholder="촬영일" />
+                    <Form.Control
+                        ref={photoDate}
+                        type="date"
+                        placeholder="촬영일"
+                    />
                 </Form.Group>
-                <Form.Group className="mb-4" controlId="formBasicPassword">
+                <Form.Group className="mb-4">
                     <Form.Label>촬영장소</Form.Label>
-                    <Form.Control type="text" placeholder="촬영장소" />
+                    <Form.Control
+                        ref={photoPlace}
+                        type="text"
+                        placeholder="촬영장소"
+                    />
                 </Form.Group>
-                <Form.Group className="mb-4" controlId="formBasicPassword">
+                <Form.Group className="mb-4">
                     <Form.Label>카메라 기종</Form.Label>
-                    <Form.Control type="text" placeholder="카메라 기종" />
+                    <Form.Control
+                        ref={usedCamera}
+                        type="text"
+                        placeholder="카메라 기종"
+                    />
                 </Form.Group>
                 <Form.Group className="mb-4">
                     <Form.Label>사용한 필름</Form.Label>
                     <Form.Select
+                        ref={usedFilm}
                         onChange={(e) => {
                             setSelectOption(
                                 e.currentTarget.options[
@@ -120,7 +173,7 @@ const Write = () => {
                             );
                         }}
                     >
-                        <option value="null">필름 선택</option>
+                        <option value="">필름 선택</option>
                         <option value="proimage">Kodak Proimage 100</option>
                         <option value="colorpluse">Kodak Color Plus 200</option>
                         <option value="gold">Kodak Gold 200</option>
@@ -135,20 +188,21 @@ const Write = () => {
                         <option value="other">직접 작성하기</option>
                     </Form.Select>
                     <FormControl
-                        selectOption={selectOption}
+                        ref={otherFilm}
+                        selectoption={selectOption}
                         className="mt-2"
                         type="text"
                         placeholder="필름 이름을 적어주세요"
                     />
                 </Form.Group>
-                <Form.Group className="mb-4" controlId="formBasicPassword">
+                <Form.Group className="mb-4">
                     <Form.Label>하고싶은 말</Form.Label>
                     <Form.Control
                         as="textarea"
                         placeholder="작품에 대한 이야기를 자유롭게 적어주세요"
                     />
                 </Form.Group>
-                <Button variant="dark" type="submit" disabled>
+                <Button variant="dark" onClick={allChk}>
                     찰칵!
                 </Button>
             </Form2>
