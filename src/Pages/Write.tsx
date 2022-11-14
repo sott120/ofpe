@@ -196,10 +196,10 @@ const Write = () => {
                     />
                 </Form.Group>
                 <Form.Group className="mb-4">
-                    <Form.Label>하고싶은 말</Form.Label>
+                    <Form.Label>작품 설명</Form.Label>
                     <Form.Control
                         as="textarea"
-                        placeholder="작품에 대한 이야기를 자유롭게 적어주세요"
+                        placeholder="작품에 대한 내용을 자유롭게 적어주세요"
                     />
                 </Form.Group>
                 <Button variant="dark" onClick={allChk}>
