@@ -98,21 +98,31 @@ const ModalT = styled.article`
         display: flex;
         align-items: center;
     }
-    & h4 {
-    }
+    
     & img {
         width: calc(1.275rem + 0.3vw);
         height: calc(1.275rem + 0.3vw);
         cursor: pointer;
         margin: 0 5px;
     }
-    & p {
+    & p,
+    span {
         font-size: 14px;
         color: #888;
     }
-    & > p {
+    & .name_ud {
         font-size: 16px;
         margin: 10px 0;
+    }
+    & .name_ud span {
+        cursor: pointer;
+    }
+    & .name_ud span:first-child::after{
+        content: "|";
+        padding-left: 8px;
+    }
+    & .name_ud span:last-child{
+        padding-left: 8px;
     }
 `;
 
@@ -148,13 +158,18 @@ const ModalCont = styled.article`
     & .comment_writer {
         padding-right: 20px;
         font-weight: bold;
+        flex-shrink: 0;
     }
     & .comment_cont > p {
         padding-bottom: 10px;
     }
-    & .comment_cont > span {
+    & .comment_cont > div > span {
         font-size: 14px;
         color: #888;
+        margin-right: 8px;
+    }
+    & .comment_cont > div > span:not(:first-child) {
+        cursor: pointer;
     }
 `;
 
@@ -167,7 +182,8 @@ const ModalFt = styled.form`
 const Main = () => {
     const [lgShow, setLgShow] = useState(false);
     const [disabled,setDisabled] = useState(true);
-    const reviewChk = (e:any) => {
+    const reviewChk = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        console.log(e.target.value.length);
         e.target.value.length < 3 ? setDisabled(true) : setDisabled(false);
     };
     return (
@@ -191,7 +207,7 @@ const Main = () => {
                         <section>
                             <div>
                                 <ModalT>
-                                    <div>
+                                    <div className="title_like">
                                         <div>
                                             <h4>제목</h4>
                                             <img
@@ -201,7 +217,13 @@ const Main = () => {
                                         </div>
                                         <p>업로드날짜</p>
                                     </div>
-                                    <p>이름</p>
+                                    <div className="name_ud">
+                                        <p>이름</p>
+                                        <div>
+                                            <span>수정</span>
+                                            <span>삭제</span>
+                                        </div>
+                                    </div>
                                 </ModalT>
                                 <ModalM>
                                     <p>
@@ -222,9 +244,7 @@ const Main = () => {
                                     </div>
                                 </ModalM>
                                 <ModalCont>
-                                    <div>
-                                        내용이내용이내용이내용이내용이내용이
-                                    </div>
+                                    <div>내용</div>
                                     <ul>
                                         <li>
                                             <p className="comment_writer">
@@ -232,25 +252,11 @@ const Main = () => {
                                             </p>
                                             <div className="comment_cont">
                                                 <p>댓글 내용</p>
-                                                <span>2022.11.11</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <p className="comment_writer">
-                                                닉네임
-                                            </p>
-                                            <div className="comment_cont">
-                                                <p>댓글 내용</p>
-                                                <span>2022.11.11</span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <p className="comment_writer">
-                                                닉네임
-                                            </p>
-                                            <div className="comment_cont">
-                                                <p>댓글 내용</p>
-                                                <span>2022.11.11</span>
+                                                <div>
+                                                    <span>2022.11.11</span>
+                                                    <span className="comment_update">수정</span>
+                                                    <span className="comment_delete">삭제</span>
+                                                </div>
                                             </div>
                                         </li>
                                     </ul>
