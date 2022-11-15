@@ -47,18 +47,18 @@ const ImgPreview = styled.div<ImgDisplayItf>`
 `;
 
 interface SelectItf {
-    selectOption: string;
+    selectoption: string;
 }
 
 const FormControl = styled(Form.Control)<SelectItf>`
-    display: ${(props) => (props.selectOption === "other" ? "block" : "none")};
+    display: ${(props) => (props.selectoption === "other" ? "block" : "none")};
 `;
 
 const Write = () => {
     const [imgBase64, setImgBase64] = useState(""); // 파일 base64
     const [imgFile, setImgFile] = useState(null); //파일
     const [selectOption, setSelectOption] = useState("");
-    
+    const [disabled, setDisabled] = useState(false);
     const imgInput = useRef() as RefObject<HTMLInputElement>;
     const photoName = useRef() as RefObject<HTMLInputElement>;
     const photoDate = useRef() as RefObject<HTMLInputElement>;
@@ -68,7 +68,9 @@ const Write = () => {
     const otherFilm = useRef() as RefObject<HTMLInputElement>;
     const write = useRef() as RefObject<HTMLFormElement>;
 
-    const allChk = ()=>{
+    const allChk = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setDisabled(true);
         if (imgInput.current!.value === "") {
             alert("사진을 골라주세요.");
             imgInput.current!.focus();
@@ -88,12 +90,12 @@ const Write = () => {
             alert("사용한 필름을 선택해주세요.");
             usedFilm.current!.focus();
         } else {
-           write.current!.submit();
+            write.current!.submit();
         }
-    }
+        setDisabled(false);
+    };
 
-    
-    const handleChangeFile = (event:any) => {
+    const handleChangeFile = (e: any) => {
         let reader = new FileReader();
         reader.onloadend = () => {
             // 2. 읽기가 완료되면 아래코드가 실행됩니다.
@@ -102,19 +104,19 @@ const Write = () => {
                 setImgBase64(base64.toString()); // 파일 base64 상태 업데이트
             }
         };
-        if (event.target.files[0]) {
-            reader.readAsDataURL(event.target.files[0]); // 1. 파일을 읽어 버퍼에 저장합니다.
-            setImgFile(event.target.files[0]); // 파일 상태 업데이트
+        if (e.target.files[0]) {
+            reader.readAsDataURL(e.target.files[0]); // 1. 파일을 읽어 버퍼에 저장합니다.
+            setImgFile(e.target.files[0]); // 파일 상태 업데이트
         }
     };
-    
-
 
     return (
         <Container>
             <Form2 ref={write} className="mt-5 mb-5">
                 <Form.Group className="mb-4">
-                    <Form.Label>필름카메라로 찍은 사진을 올려주세요.</Form.Label>
+                    <Form.Label>
+                        필름카메라로 찍은 사진을 올려주세요.
+                    </Form.Label>
                     <ImgPreview
                         imgBase64={imgBase64}
                         onClick={() => {
@@ -202,12 +204,12 @@ const Write = () => {
                         placeholder="작품에 대한 내용을 자유롭게 적어주세요"
                     />
                 </Form.Group>
-                <Button variant="dark" onClick={allChk}>
+                <Button variant="dark" onClick={allChk} disabled={disabled}>
                     찰칵!
                 </Button>
             </Form2>
         </Container>
     );
-}
+};
 
 export default Write;
