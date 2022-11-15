@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Button, Modal, Form } from "react-bootstrap";
 import styled from "styled-components";
 import axios from "axios";
-import { useState, useRef } from "react";
+import { useState, useRef, RefObject } from "react";
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 import Masonry from "react-masonry-css";
 
@@ -182,10 +182,18 @@ const ModalFt = styled.form`
 const Main = () => {
     const [lgShow, setLgShow] = useState(false);
     const [disabled,setDisabled] = useState(true);
+    const comment = useRef() as RefObject<HTMLFormElement>;
+    const textarea = useRef() as RefObject<HTMLTextAreaElement>;
     const reviewChk = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        console.log(e.target.value.length);
         e.target.value.length < 3 ? setDisabled(true) : setDisabled(false);
     };
+
+    function submitChk(e:React.MouseEvent<HTMLButtonElement>) {
+        e.preventDefault();
+        
+        setDisabled(true);
+    };
+
     return (
         <>
             {/* <Header/> */}
@@ -263,13 +271,14 @@ const Main = () => {
                                 </ModalCont>
                             </div>
                             <div>
-                                <ModalFt>
+                                <ModalFt ref={comment}>
                                     <FormControl
+                                        ref={textarea}
                                         onChange={reviewChk}
                                         as="textarea"
                                         placeholder="댓글 달기..."
                                     />
-                                    <Button variant="dark" disabled={disabled}>
+                                    <Button variant="dark" onClick={submitChk} disabled={disabled}>
                                         게시
                                     </Button>
                                 </ModalFt>
