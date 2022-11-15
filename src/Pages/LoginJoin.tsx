@@ -62,6 +62,21 @@ const FormTxt = styled(Form.Text)<FormTxtItf>`
 interface StyledProps extends LoginBoxItf, FormTxtItf {}
 
 const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
+    const [disabled, setDisabled] = useState(false);
+    const goId = useRef() as RefObject<HTMLInputElement>;
+    const goPw = useRef() as RefObject<HTMLInputElement>;
+    function goChk(e: React.MouseEvent<HTMLButtonElement>) {
+        e.preventDefault();
+        setDisabled(true);
+        if(goId.current!.value === ""){
+            alert("아이디를 입력해주세요.");
+            goId.current!.focus();
+        } else if(goPw.current!.value === ""){
+            alert("비밀번호를 입력해주세요.");
+            goPw.current!.focus();
+        }
+        setDisabled(false);
+    }
     return (
         <LoginWrap>
             <LoginBox boxOpacity={60} textAlign={"center"}>
@@ -78,8 +93,7 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
                         label="아이디"
                         className="mb-3 text-dark"
                     >
-                        <Form.Control type="text" placeholder="아이디" />
-                        <FormTxt>아이디를 입력해주세요.</FormTxt>
+                        <Form.Control type="text" ref={goId} placeholder="아이디" />
                     </FloatingLabel>
 
                     <FloatingLabel
@@ -87,8 +101,7 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
                         label="비밀번호"
                         className="mb-3 text-dark"
                     >
-                        <Form.Control type="password" placeholder="비밀번호" />
-                        <FormTxt>비밀번호가 일치하지 않습니다.</FormTxt>
+                        <Form.Control type="password" ref={goPw} placeholder="비밀번호" />
                     </FloatingLabel>
 
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
@@ -97,23 +110,29 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
                             label="다음부턴 자동 로그인"
                         />
                     </Form.Group>
-                    <Button variant="warning" type="submit" className="mb-3">
+                    <Button
+                        variant="warning"
+                        className="mb-3"
+                        onClick={goChk}
+                        disabled={disabled}
+                    >
                         로그인
                     </Button>
                 </Form>
-                <Button variant="dark" type="submit">
-                    게스트로 로그인
-                </Button>
+                <Button variant="dark">게스트로 로그인</Button>
             </LoginBox>
         </LoginWrap>
     );
 };
 
 const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
+    const [disabled, setDisabled] = useState(false);
+    const [passBtn, setPassBtn] = useState({id: false, name: false, pw: false, pwchk: false});
     const idRef = useRef() as RefObject<HTMLInputElement>;
     const nameRef = useRef() as RefObject<HTMLInputElement>;
     const pwRef = useRef() as RefObject<HTMLInputElement>;
     const pwchkRef = useRef() as RefObject<HTMLInputElement>;
+    const member = useRef() as RefObject<HTMLFormElement>;
     let chkIdCont = [
         { color: "888", txt: "5~20자 영문 소문자, 숫자" },
         { color: "ff5252", txt: "5~20자 영문 소문자, 숫자만 입력 가능합니다" },
@@ -147,42 +166,95 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
     function chkId() {
         const idPattern = /^[a-zA-Z0-9]{5,20}$/g;
         const id = idRef.current!.value;
+        let copy = passBtn;
         if (!idPattern.test(id) && id !== "") {
             setIdTxt(chkIdCont[1]);
+            copy.id = false;
+            setPassBtn(copy);
         } else if (!idPattern.test(id) && id === "") {
             setIdTxt(chkIdCont[2]);
+            copy.id = false;
+            setPassBtn(copy);
         } else if (idPattern.test(id)) {
             setIdTxt(chkIdCont[4]);
+            copy.id = true;
+            setPassBtn(copy);
         }
     }
     function chkName() {
         const namePattern = /^[a-zA-Z가-힣]{2,10}$/g;
         const name = nameRef.current!.value;
+        let copy = passBtn;
         if (!namePattern.test(name) && name !== "") {
             setNameTxt(chkNameCont[1]);
+            copy.name = false;
+            setPassBtn(copy);
         } else if (!namePattern.test(name) && name === "") {
             setNameTxt(chkNameCont[2]);
+            copy.name = false;
+            setPassBtn(copy);
         } else if (namePattern.test(name)) {
             setNameTxt(chkNameCont[4]);
+            copy.name = true;
+            setPassBtn(copy);
         }
     }
     function chkPw() {
         const pwPattern = /^[a-zA-Z0-9~!@#$%^&*()_+|<>?:{}]{4,16}$/g;
         const pw = pwRef.current!.value;
+        pwchkRef.current!.value = "";
+        let copy = passBtn;
+        setPwchkTxt(chkPw2Cont[0]);
+        copy.pwchk = false;
         if (!pwPattern.test(pw) && pw !== "") {            
             setPwTxt(chkPwCont[1]);
+            copy.pw = false;
+            setPassBtn(copy);
         } else if (!pwPattern.test(pw) && pw === "") {            
             setPwTxt(chkPwCont[2]);
+            copy.pw = false;
+            setPassBtn(copy);
         } else if (pwPattern.test(pw)) {
-            setPwTxt(chkPwCont[3]);            
+            setPwTxt(chkPwCont[3]);   
+            copy.pw = true;
+            setPassBtn(copy);
         }
     }
     function chkPw2() {
         const pw = pwRef.current!.value;
         const pwchk = pwchkRef.current!.value;
+        let copy = passBtn;
         if(pw === pwchk){
             setPwchkTxt(chkPw2Cont[2])
-        } else{ setPwchkTxt(chkPw2Cont[1])}
+            copy.pwchk = true;
+            setPassBtn(copy);
+        } else{ 
+            setPwchkTxt(chkPw2Cont[1]);
+            copy.pwchk = false;
+            setPassBtn(copy);
+        }
+        
+    }
+
+    function passChk(e:React.MouseEvent<HTMLButtonElement>){
+        e.preventDefault();
+        setDisabled(true);
+        if (passBtn.id === false) {
+            alert("아이디를 확인해주세요.");
+            idRef.current!.focus();
+        } else if (passBtn.name === false) {
+            alert("닉네임을 확인해주세요.");
+            nameRef.current!.focus();
+        } else if (passBtn.pw === false) {
+            alert("비밀번호를 확인해주세요.");
+            pwRef.current!.focus();
+        } else if (passBtn.pwchk === false) {
+            alert("비밀번호가 일치하지 않습니다.");
+            pwchkRef.current!.focus();
+        } else {
+            member.current!.submit();
+        }
+        setDisabled(false);
     }
 
     return (
@@ -193,7 +265,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
                     <img src="./image/ofpe_logo.png" alt="오프 로고이미지" />
                 </h1>
                 <h3 className="mb-5">회원가입</h3>
-                <Form>
+                <Form ref={member}>
                     <Form.Group className="mb-3">
                         <Form.Label>아이디</Form.Label>
                         <Form.Control onBlur={chkId} ref={idRef} type="text" />
@@ -226,11 +298,16 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
                         />
                         <FormTxt color={pwchkTxt.color}>{pwchkTxt.txt}</FormTxt>
                     </Form.Group>
-                    <Button variant="warning" type="submit" className="mb-3">
+                    <Button
+                        variant="warning"
+                        className="mb-3"
+                        onClick={passChk}
+                        disabled={disabled}
+                    >
                         회원가입
                     </Button>
                 </Form>
-                <Button variant="dark" >게스트로 보기</Button>
+                <Button variant="dark">게스트로 보기</Button>
             </LoginBox>
         </LoginWrap>
     );
