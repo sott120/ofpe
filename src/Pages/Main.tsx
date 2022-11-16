@@ -5,7 +5,7 @@ import axios from "axios";
 import { useState, useRef, RefObject } from "react";
 import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 import Masonry from "react-masonry-css";
-
+import { useEffect } from "react";
 
 const breakpointColumnsObj = {
     default: 4,
@@ -47,7 +47,7 @@ const Figure = styled.div`
 
 const ModalInner = styled.div`
     display: flex;
-
+    word-break: break-all;
     @media screen and (max-width: 991px) {
         flex-direction: column;
         & section:last-child {
@@ -180,6 +180,40 @@ const ModalFt = styled.form`
 `;
 
 const Main = () => {
+    const [getList, setGetList] = useState([
+        {   
+            index : "",
+            create_date: "",
+            create_user: "",
+            photo_url: "",
+            photo_name: "",
+            photo_date: "",
+            photo_place: "",
+            used_camera: "",
+            used_film: "",
+            other_film: "",
+            photo_desc: "",
+        },
+    ]);
+    useEffect(() => {
+        axios.get(process.env.REACT_APP_ip + "/board").then((res) => {
+           setGetList(res.data);
+        });
+    }, []);
+
+    const [elTarget,setElTarget] = useState({   
+            index : "",
+            create_date: "",
+            create_user: "",
+            photo_url: "",
+            photo_name: "",
+            photo_date: "",
+            photo_place: "",
+            used_camera: "",
+            used_film: "",
+            other_film: "",
+            photo_desc: "",
+        });
     const [lgShow, setLgShow] = useState(false);
     const [disabled,setDisabled] = useState(true);
     const comment = useRef() as RefObject<HTMLFormElement>;
@@ -196,7 +230,6 @@ const Main = () => {
 
     return (
         <>
-            {/* <Header/> */}
             <Modal
                 size="xl"
                 show={lgShow}
@@ -217,16 +250,16 @@ const Main = () => {
                                 <ModalT>
                                     <div className="title_like">
                                         <div>
-                                            <h4>제목</h4>
+                                            <h4>{elTarget.photo_name}</h4>
                                             <img
                                                 src={"./image/star.svg"}
                                                 alt="즐겨찾기 아이콘"
                                             />
                                         </div>
-                                        <p>업로드날짜</p>
+                                        <p>{elTarget.create_date}</p>
                                     </div>
                                     <div className="name_ud">
-                                        <p>이름</p>
+                                        <p>{elTarget.create_user}</p>
                                         <div>
                                             <span>수정</span>
                                             <span>삭제</span>
@@ -236,23 +269,27 @@ const Main = () => {
                                 <ModalM>
                                     <p>
                                         <span>촬영날짜</span>
-                                        2022.11.11
+                                        {elTarget.photo_date}
                                     </p>
                                     <p>
                                         <span>촬영장소</span>
-                                        성수연방
+                                        {elTarget.photo_place}
                                     </p>
                                     <p>
                                         <span>카메라</span>
-                                        도란나
+                                        {elTarget.used_camera}
                                     </p>
                                     <div>
                                         <img src="/image/buam.png" alt="" />
-                                        <p>Buam64</p>
+                                        <p>
+                                            {elTarget.used_film !== "other"
+                                                ? elTarget.used_film
+                                                : elTarget.other_film}
+                                        </p>
                                     </div>
                                 </ModalM>
                                 <ModalCont>
-                                    <div>내용</div>
+                                    <div>{elTarget.photo_desc}</div>
                                     <ul>
                                         <li>
                                             <p className="comment_writer">
@@ -262,8 +299,12 @@ const Main = () => {
                                                 <p>댓글 내용</p>
                                                 <div>
                                                     <span>2022.11.11</span>
-                                                    <span className="comment_update">수정</span>
-                                                    <span className="comment_delete">삭제</span>
+                                                    <span className="comment_update">
+                                                        수정
+                                                    </span>
+                                                    <span className="comment_delete">
+                                                        삭제
+                                                    </span>
                                                 </div>
                                             </div>
                                         </li>
@@ -278,7 +319,11 @@ const Main = () => {
                                         as="textarea"
                                         placeholder="댓글 달기..."
                                     />
-                                    <Button variant="dark" onClick={submitChk} disabled={disabled}>
+                                    <Button
+                                        variant="dark"
+                                        onClick={submitChk}
+                                        disabled={disabled}
+                                    >
                                         게시
                                     </Button>
                                 </ModalFt>
@@ -293,10 +338,20 @@ const Main = () => {
                     columnClassName="my-masonry-grid_column"
                     breakpointCols={breakpointColumnsObj}
                 >
-                    <Figure onClick={() => setLgShow(true)}>
-                        <img src="/image/login_bg.jpg" alt="" />
-                        <figcaption>1번</figcaption>
-                    </Figure>
+                    {getList.map((el, i) => {
+                        return (
+                            <Figure
+                                onClick={() => {
+                                    setElTarget(el);
+                                    setLgShow(true);
+                                }}
+                                key={i}
+                            >
+                                <img src="./image/login_bg.jpg" alt="" />
+                                <figcaption>{el.photo_date}</figcaption>
+                            </Figure>
+                        );
+                    })}
                 </CustomMasonry>
             </Container>
         </>
