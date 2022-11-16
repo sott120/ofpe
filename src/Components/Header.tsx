@@ -48,17 +48,13 @@ const Header = () => {
                     </div>
                 </NavbarBrand>
                 <Nav>
-                    {/* <Nav.Link
+                    <Nav.Link
                             onClick={() => {
-                                navigate("/");
+                                navigate("/login");
                             }}
                         >
-                            박소연
+                            로그아웃
                         </Nav.Link>
-                        <Nav.Link disabled>
-                            님, 오늘의 사진은 어떠셨나요?
-                        </Nav.Link>
-                        */}
                     <Button
                         className="ms-3"
                         onClick={() => {
