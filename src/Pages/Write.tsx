@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useState, useRef, RefObject } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Form, Container } from "react-bootstrap";
+import axios from "axios";
 
 interface ImgDisplayItf {
     imgBase64:string
@@ -66,6 +67,7 @@ const Write = () => {
     const usedCamera = useRef() as RefObject<HTMLInputElement>;
     const usedFilm = useRef() as RefObject<HTMLSelectElement>;
     const otherFilm = useRef() as RefObject<HTMLInputElement>;
+    const photoDesc = useRef() as RefObject<HTMLTextAreaElement>;
     const write = useRef() as RefObject<HTMLFormElement>;
 
     const allChk = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -74,6 +76,7 @@ const Write = () => {
         if (imgInput.current!.value === "") {
             alert("사진을 골라주세요.");
             imgInput.current!.focus();
+            console.log(photoDesc.current!.value);
         } else if (photoName.current!.value === "") {
             alert("작품 이름을 적어주세요.");
             photoName.current!.focus();
@@ -90,7 +93,22 @@ const Write = () => {
             alert("사용한 필름을 선택해주세요.");
             usedFilm.current!.focus();
         } else {
-            write.current!.submit();
+            axios
+                .post(process.env.REACT_APP_ip + "/board/write", {
+                    photo_name: photoName.current!.value,
+                    photo_date: photoDate.current!.value,
+                    photo_place: photoPlace.current!.value,
+                    used_camera: usedCamera.current!.value,
+                    used_film: usedFilm.current!.value,
+                    other_film: otherFilm.current!.value,
+                    photo_desc: photoDesc.current!.value,
+                })
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((e) => {
+                    console.error(e);
+                });
         }
         setDisabled(false);
     };
@@ -200,6 +218,7 @@ const Write = () => {
                 <Form.Group className="mb-4">
                     <Form.Label>작품 설명</Form.Label>
                     <Form.Control
+                        ref={photoDesc}
                         as="textarea"
                         placeholder="작품에 대한 내용을 자유롭게 적어주세요"
                     />
