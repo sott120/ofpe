@@ -11,6 +11,7 @@ h2, .h2 {
 }
 h3, .h3 {
   font-size: calc(1.3rem + 0.6vw) ;
+  line-height: 1.2em;
 }
 h4, .h4 {
   font-size: calc(1.275rem + 0.3vw) ;
