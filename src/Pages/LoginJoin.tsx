@@ -91,7 +91,7 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
                     <FloatingLabel
                         controlId="floatingInput"
                         label="아이디"
-                        className="mb-3 text-dark"
+                        className="mb-4 text-dark"
                     >
                         <Form.Control type="text" ref={goId} placeholder="아이디" />
                     </FloatingLabel>
@@ -103,13 +103,12 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
                     >
                         <Form.Control type="password" ref={goPw} placeholder="비밀번호" />
                     </FloatingLabel>
-
-                    <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                    {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
                         <FormCheck
                             type="checkbox"
                             label="다음부턴 자동 로그인"
                         />
-                    </Form.Group>
+                    </Form.Group> */}
                     <Button
                         variant="warning"
                         className="mb-3"
@@ -166,7 +165,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
     function chkId() {
         const idPattern = /^[a-zA-Z0-9]{5,20}$/g;
         const id = idRef.current!.value;
-        let copy = passBtn;
+        let copy = {...passBtn};
         if (!idPattern.test(id) && id !== "") {
             setIdTxt(chkIdCont[1]);
             copy.id = false;
@@ -184,7 +183,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
     function chkName() {
         const namePattern = /^[a-zA-Z가-힣]{2,10}$/g;
         const name = nameRef.current!.value;
-        let copy = passBtn;
+        let copy = {...passBtn};
         if (!namePattern.test(name) && name !== "") {
             setNameTxt(chkNameCont[1]);
             copy.name = false;
@@ -203,7 +202,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
         const pwPattern = /^[a-zA-Z0-9~!@#$%^&*()_+|<>?:{}]{4,16}$/g;
         const pw = pwRef.current!.value;
         pwchkRef.current!.value = "";
-        let copy = passBtn;
+        let copy = {...passBtn};
         setPwchkTxt(chkPw2Cont[0]);
         copy.pwchk = false;
         if (!pwPattern.test(pw) && pw !== "") {            
@@ -223,7 +222,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
     function chkPw2() {
         const pw = pwRef.current!.value;
         const pwchk = pwchkRef.current!.value;
-        let copy = passBtn;
+        let copy = {...passBtn};
         if(pw === pwchk){
             setPwchkTxt(chkPw2Cont[2])
             copy.pwchk = true;
@@ -252,7 +251,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
             alert("비밀번호가 일치하지 않습니다.");
             pwchkRef.current!.focus();
         } else {
-            member.current!.submit();
+            console.log('통과')
         }
         setDisabled(false);
     }
