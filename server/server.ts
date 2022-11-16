@@ -20,8 +20,35 @@ app.post('/api/test', (req,res) => {
     })
 })
 
-app.get('/',(req,res) =>{
-    res.send('안녕하세요')
+app.get("/board", (req, res) => {
+    const showQuery = "SELECT *FROM posting;";
+    db.query(showQuery, (err, result) => {
+        res.status(200).json(result);
+    });
+});
+
+app.post('/board/write',(req,res) =>{
+    let { photo_name, photo_date, photo_place, used_camera, used_film, other_film, photo_desc } =
+        req.body;
+    let writeQuery =
+        "INSERT INTO `posting`(create_date,photo_name,photo_date,photo_place,used_camera,used_film,other_film,photo_desc) VALUES (curdate(),?,?,?,?,?,?,?)";
+    db.query(
+        writeQuery,
+        [
+            photo_name,
+            photo_date,
+            photo_place,
+            used_camera,
+            used_film,
+            other_film,
+            photo_desc,
+        ],
+        (err, result) => {
+            console.log(err);
+            res.status(200).json("등록완료");
+        }
+    );
+    
 })
 
 app.listen(8080,()=>{
