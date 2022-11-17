@@ -197,9 +197,9 @@ const Main = () => {
     ]);
     useEffect(() => {
         axios.get(process.env.REACT_APP_ip + "/board").then((res) => {
-           setGetList(res.data);
+            setGetList(res.data);
         });
-    }, []);
+    }, [getList]);
 
     const [elTarget,setElTarget] = useState({   
             index : "",
@@ -214,6 +214,26 @@ const Main = () => {
             other_film: "",
             photo_desc: "",
         });
+    const postUpdate = () => {
+       
+    };  
+    
+    const postDelete = () => {
+        if (window.confirm("삭제하시겠습니까?") === true){
+            axios
+                .post(process.env.REACT_APP_ip + "/board/delete", {
+                    index: elTarget.index,
+                })
+                .then((res) => {
+                    console.log(res);
+                    setLgShow(false);
+                    alert("삭제되었습니다.");
+                })
+                .catch((e) => {
+                    console.error(e);
+                });
+        } else {return};
+    };
     const [lgShow, setLgShow] = useState(false);
     const [disabled,setDisabled] = useState(true);
     const comment = useRef() as RefObject<HTMLFormElement>;
@@ -222,7 +242,7 @@ const Main = () => {
         e.target.value.length < 3 ? setDisabled(true) : setDisabled(false);
     };
 
-    function submitChk(e:React.MouseEvent<HTMLButtonElement>) {
+    const submitChk = (e:React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         
         setDisabled(true);
@@ -261,8 +281,12 @@ const Main = () => {
                                     <div className="name_ud">
                                         <p>{elTarget.create_user}</p>
                                         <div>
-                                            <span>수정</span>
-                                            <span>삭제</span>
+                                            <span onClick={postUpdate}>
+                                                수정
+                                            </span>
+                                            <span onClick={postDelete}>
+                                                삭제
+                                            </span>
                                         </div>
                                     </div>
                                 </ModalT>
@@ -280,7 +304,14 @@ const Main = () => {
                                         {elTarget.used_camera}
                                     </p>
                                     <div>
-                                        <img src="/image/buam.png" alt="" />
+                                        <img
+                                            src={
+                                                "/image/" +
+                                                elTarget.used_film +
+                                                ".png"
+                                            }
+                                            alt="사용 필름 이미지"
+                                        />
                                         <p>
                                             {elTarget.used_film !== "other"
                                                 ? elTarget.used_film
