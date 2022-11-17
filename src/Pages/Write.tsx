@@ -201,10 +201,10 @@ const Write = () => {
                         <option value="potra">Kodak Potra 160</option>
                         <option value="potra">Kodak Potra 400</option>
                         <option value="potra">Kodak Potra 800</option>
-                        <option value="Ektar">Kodak Ektar 100</option>
+                        <option value="ektar">Kodak Ektar 100</option>
                         <option value="c200">Fuji C200</option>
                         <option value="buam">Buam 64</option>
-                        <option value="nouvekevague">Nouvekevague</option>
+                        <option value="nouvelevague">Nouvekevague</option>
                         <option value="other">직접 작성하기</option>
                     </Form.Select>
                     <FormControl
