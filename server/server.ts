@@ -49,7 +49,16 @@ app.post('/board/write',(req,res) =>{
         }
     );
     
-})
+});
+
+app.post("/board/delete", (req, res) => {
+    let index = req.body.index;
+    let deleteQuery = "DELETE FROM posting WHERE (`index` = ?)";
+    db.query(deleteQuery, [index], (err, result) => {
+        console.log(err);
+        res.status(200).json("삭제완료");
+    });
+});
 
 app.listen(8080,()=>{
     console.log("열림zzz")
