@@ -162,7 +162,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
     const [pwTxt, setPwTxt] = useState(chkPwCont[0]);
     const [pwchkTxt, setPwchkTxt] = useState(chkPw2Cont[0]);
 
-    function chkId() {
+    const chkId = () => {
         const idPattern = /^[a-zA-Z0-9]{5,20}$/g;
         const id = idRef.current!.value;
         let copy = {...passBtn};
@@ -180,7 +180,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
             setPassBtn(copy);
         }
     }
-    function chkName() {
+    const chkName = () => {
         const namePattern = /^[a-zA-Z가-힣]{2,10}$/g;
         const name = nameRef.current!.value;
         let copy = {...passBtn};
@@ -198,7 +198,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
             setPassBtn(copy);
         }
     }
-    function chkPw() {
+    const chkPw = () => {
         const pwPattern = /^[a-zA-Z0-9~!@#$%^&*()_+|<>?:{}]{4,16}$/g;
         const pw = pwRef.current!.value;
         pwchkRef.current!.value = "";
@@ -219,7 +219,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
             setPassBtn(copy);
         }
     }
-    function chkPw2() {
+    const chkPw2 = () => {
         const pw = pwRef.current!.value;
         const pwchk = pwchkRef.current!.value;
         let copy = {...passBtn};
@@ -235,7 +235,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
         
     }
 
-    function passChk(e:React.MouseEvent<HTMLButtonElement>){
+    const passChk = (e:React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         setDisabled(true);
         if (passBtn.id === false) {
