@@ -21,6 +21,7 @@ function App() {
               <Route element={<Layout />}>
                   <Route path="/" element={<Main />}></Route>
                   <Route path="/write" element={<Write />}></Route>
+                  <Route path="/write/edit" element={<Write />}></Route>
               </Route>
               <Route element={<LayoutNotHeader />}>
                   <Route path="/login" element={<Login />}></Route>
