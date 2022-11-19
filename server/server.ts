@@ -23,11 +23,13 @@ app.post('/api/test', (req,res) => {
 app.get("/board", (req, res) => {
     const showQuery = "SELECT *FROM posting;";
     db.query(showQuery, (err, result) => {
-        res.status(200).json(result);
+        res.status(200).json(result.reverse());
     });
 });
 
-app.post('/board/write',(req,res) =>{
+
+
+app.post('/board',(req,res) =>{
     let { photo_name, photo_date, photo_place, used_camera, used_film, other_film, photo_desc } =
         req.body;
     let writeQuery =
@@ -51,8 +53,8 @@ app.post('/board/write',(req,res) =>{
     
 });
 
-app.post("/board/delete", (req, res) => {
-    let index = req.body.index;
+app.delete("/board", (req, res) => {
+    let index = req.query.index;
     let deleteQuery = "DELETE FROM posting WHERE (`index` = ?)";
     db.query(deleteQuery, [index], (err, result) => {
         console.log(err);
