@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import { useState, useRef, RefObject } from "react";
+import { useState, useRef, RefObject, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Form, Container } from "react-bootstrap";
 import axios from "axios";
+import {useLocation} from 'react-router-dom'
 
 interface ImgDisplayItf {
     imgBase64:string
@@ -56,6 +57,9 @@ const FormControl = styled(Form.Control)<SelectItf>`
 `;
 
 const Write = () => {
+    const { state } = useLocation();
+    console.log(state)
+
     const [imgBase64, setImgBase64] = useState(""); // 파일 base64
     const [imgFile, setImgFile] = useState(null); //파일
     const [selectOption, setSelectOption] = useState("");
@@ -69,6 +73,17 @@ const Write = () => {
     const otherFilm = useRef() as RefObject<HTMLInputElement>;
     const photoDesc = useRef() as RefObject<HTMLTextAreaElement>;
     const write = useRef() as RefObject<HTMLFormElement>;
+
+    useEffect(()=>{
+        
+        if (state) {
+            photoDate.current!.value = state.photo_date;
+            console.log("state가 있음");
+        } else {
+            console.log("state가 없음");
+        }
+
+    },[])
 
     const allChk = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -94,7 +109,7 @@ const Write = () => {
             usedFilm.current!.focus();
         } else {
             axios
-                .post(process.env.REACT_APP_ip + "/board/write", {
+                .post(process.env.REACT_APP_ip + "/board", {
                     photo_name: photoName.current!.value,
                     photo_date: photoDate.current!.value,
                     photo_place: photoPlace.current!.value,
