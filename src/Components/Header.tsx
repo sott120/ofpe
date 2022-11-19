@@ -44,17 +44,17 @@ const Header = () => {
                     }}
                 >
                     <div>
-                        <img src="./image/ofpe_logo.png" alt="" />
+                        <img src={process.env.PUBLIC_URL +"/image/ofpe_logo.png"} alt="헤더 로고" />
                     </div>
                 </NavbarBrand>
                 <Nav>
                     <Nav.Link
-                            onClick={() => {
-                                navigate("/login");
-                            }}
-                        >
-                            로그아웃
-                        </Nav.Link>
+                        onClick={() => {
+                            navigate("/login");
+                        }}
+                    >
+                        로그아웃
+                    </Nav.Link>
                     <Button
                         className="ms-3"
                         onClick={() => {
