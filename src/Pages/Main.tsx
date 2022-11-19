@@ -3,7 +3,7 @@ import { Container, Button, Modal, Form } from "react-bootstrap";
 import styled from "styled-components";
 import axios from "axios";
 import { useState, useRef, RefObject } from "react";
-import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
+import { Routes, Route, Link, useNavigate, Outlet, Navigate } from "react-router-dom";
 import Masonry from "react-masonry-css";
 import { useEffect } from "react";
 
@@ -180,6 +180,7 @@ const ModalFt = styled.form`
 `;
 
 const Main = () => {
+    const navigate = useNavigate();
     const [getList, setGetList] = useState([
         {   
             index : "",
@@ -195,11 +196,16 @@ const Main = () => {
             photo_desc: "",
         },
     ]);
+
     useEffect(() => {
+        getLiFunction();
+    }, []);
+
+    const getLiFunction = ()=>{
         axios.get(process.env.REACT_APP_ip + "/board").then((res) => {
             setGetList(res.data);
         });
-    }, [getList]);
+    };
 
     const [elTarget,setElTarget] = useState({   
             index : "",
@@ -215,19 +221,18 @@ const Main = () => {
             photo_desc: "",
         });
     const postUpdate = () => {
-       
+       navigate("/write/edit",{state:elTarget});
     };  
     
     const postDelete = () => {
         if (window.confirm("삭제하시겠습니까?") === true){
             axios
-                .post(process.env.REACT_APP_ip + "/board/delete", {
-                    index: elTarget.index,
-                })
+                .delete(process.env.REACT_APP_ip + `/board?index=${elTarget.index}`)
                 .then((res) => {
                     console.log(res);
                     setLgShow(false);
                     alert("삭제되었습니다.");
+                    getLiFunction();
                 })
                 .catch((e) => {
                     console.error(e);
