@@ -222,7 +222,7 @@ const Main = () => {
         });
     const postUpdate = () => {
        navigate("/write/edit",{state:elTarget});
-    };  
+    };
     
     const postDelete = () => {
         if (window.confirm("삭제하시겠습니까?") === true){

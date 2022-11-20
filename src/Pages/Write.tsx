@@ -72,15 +72,22 @@ const Write = () => {
     const usedFilm = useRef() as RefObject<HTMLSelectElement>;
     const otherFilm = useRef() as RefObject<HTMLInputElement>;
     const photoDesc = useRef() as RefObject<HTMLTextAreaElement>;
-    const write = useRef() as RefObject<HTMLFormElement>;
-
+    const sbmitBtn = useRef() as RefObject<HTMLButtonElement>;
+    
     useEffect(()=>{
         
         if (state) {
+            
+            photoName.current!.value = state.photo_name;
             photoDate.current!.value = state.photo_date;
-            console.log("state가 있음");
+            photoPlace.current!.value = state.photo_place;
+            usedCamera.current!.value = state.used_camera;
+            usedFilm.current!.value = state.used_film;
+            otherFilm.current!.value = state.other_film;
+            photoDesc.current!.value = state.photo_desc;
+            sbmitBtn.current!.innerText = "수정하기";
         } else {
-            console.log("state가 없음");
+            sbmitBtn.current!.innerText = "찰칵!";
         }
 
     },[])
@@ -145,7 +152,7 @@ const Write = () => {
 
     return (
         <Container>
-            <Form2 ref={write} className="mt-5 mb-5">
+            <Form2 className="mt-5 mb-5">
                 <Form.Group className="mb-4">
                     <Form.Label>
                         필름카메라로 찍은 사진을 올려주세요.
@@ -238,7 +245,7 @@ const Write = () => {
                         placeholder="작품에 대한 내용을 자유롭게 적어주세요"
                     />
                 </Form.Group>
-                <Button variant="dark" onClick={allChk} disabled={disabled}>
+                <Button variant="dark" ref={sbmitBtn} onClick={allChk} disabled={disabled}>
                     찰칵!
                 </Button>
             </Form2>
