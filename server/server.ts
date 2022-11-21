@@ -20,6 +20,7 @@ app.post('/api/test', (req,res) => {
     })
 })
 
+// 전체 게시글 불러오기
 app.get("/board", (req, res) => {
     const showQuery = "SELECT *FROM posting;";
     db.query(showQuery, (err, result) => {
@@ -28,7 +29,7 @@ app.get("/board", (req, res) => {
 });
 
 
-
+// 게시글 작성
 app.post('/board',(req,res) =>{
     let { photo_name, photo_date, photo_place, used_camera, used_film, other_film, photo_desc } =
         req.body;
@@ -50,12 +51,70 @@ app.post('/board',(req,res) =>{
             res.status(200).json("등록완료");
         }
     );
+});
+
+// 게시글 수정
+app.put('/board',(req,res) =>{
+    let { index, photo_name, photo_date, photo_place, used_camera, used_film, other_film, photo_desc } =
+        req.body;
+    let updateQuery =
+        "UPDATE `posting` SET photo_name=?, photo_date=?, photo_place=?, used_camera=?, used_film=?, other_film=?, photo_desc=? WHERE `index` = ? ";
+    db.query(
+        updateQuery,
+        [
+            photo_name,
+            photo_date,
+            photo_place,
+            used_camera,
+            used_film,
+            other_film,
+            photo_desc,
+            index,
+        ],
+        (err, result) => {
+            console.log(err);
+            res.status(200).json("수정했따");
+        }
+    );
     
 });
 
+// 게시글 삭제
 app.delete("/board", (req, res) => {
     let index = req.query.index;
-    let deleteQuery = "DELETE FROM posting WHERE (`index` = ?)";
+    let deleteQuery = "DELETE FROM posting WHERE `index` = ?";
+    db.query(deleteQuery, [index], (err, result) => {
+        console.log(err);
+        res.status(200).json("삭제완료");
+    });
+});
+
+// 댓글 불러오기
+app.get("/board/comment", (req, res) => {
+    let post_index = req.query.index;
+    console.log(post_index)
+    const showQuery = "SELECT * FROM `comment` WHERE post_index = ?";
+    db.query(showQuery,[post_index], (err, result) => {
+         console.log(err)
+        res.status(200).json(result);
+    });
+});
+
+// 댓글 작성
+app.post("/board/comment", (req, res) => {
+    let { post_index, content } = req.body;
+    let cmtWriteQuery =
+        "INSERT INTO `comment`(post_index, content, date) VALUES (?,?,curdate())";
+    db.query(cmtWriteQuery, [post_index, content], (err, result) => {
+        console.log(err);
+        res.status(200).json("댓글등록완료");
+    });
+});
+
+// 댓글 삭제
+app.delete("/board/comment", (req, res) => {
+    let index = req.query.index;
+    let deleteQuery = "DELETE FROM `comment` WHERE `index` = ?";
     db.query(deleteQuery, [index], (err, result) => {
         console.log(err);
         res.status(200).json("삭제완료");

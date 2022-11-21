@@ -182,8 +182,8 @@ const ModalFt = styled.form`
 const Main = () => {
     const navigate = useNavigate();
     const [getList, setGetList] = useState([
-        {   
-            index : "",
+        {
+            index: "",
             create_date: "",
             create_user: "",
             photo_url: "",
@@ -201,33 +201,36 @@ const Main = () => {
         getLiFunction();
     }, []);
 
-    const getLiFunction = ()=>{
+    const getLiFunction = () => {
         axios.get(process.env.REACT_APP_ip + "/board").then((res) => {
             setGetList(res.data);
         });
     };
 
-    const [elTarget,setElTarget] = useState({   
-            index : "",
-            create_date: "",
-            create_user: "",
-            photo_url: "",
-            photo_name: "",
-            photo_date: "",
-            photo_place: "",
-            used_camera: "",
-            used_film: "",
-            other_film: "",
-            photo_desc: "",
-        });
+    const [elTarget, setElTarget] = useState({
+        index: "",
+        create_date: "",
+        create_user: "",
+        photo_url: "",
+        photo_name: "",
+        photo_date: "",
+        photo_place: "",
+        used_camera: "",
+        used_film: "",
+        other_film: "",
+        photo_desc: "",
+    });
+
     const postUpdate = () => {
-       navigate("/write/edit",{state:elTarget});
+        navigate("/write/edit", { state: elTarget });
     };
-    
+
     const postDelete = () => {
-        if (window.confirm("삭제하시겠습니까?") === true){
+        if (window.confirm("삭제하시겠습니까?") === true) {
             axios
-                .delete(process.env.REACT_APP_ip + `/board?index=${elTarget.index}`)
+                .delete(
+                    process.env.REACT_APP_ip + `/board?index=${elTarget.index}`
+                )
                 .then((res) => {
                     console.log(res);
                     setLgShow(false);
@@ -237,19 +240,69 @@ const Main = () => {
                 .catch((e) => {
                     console.error(e);
                 });
-        } else {return};
+        } else {
+            return;
+        }
     };
+
     const [lgShow, setLgShow] = useState(false);
-    const [disabled,setDisabled] = useState(true);
+    const [disabled, setDisabled] = useState(true);
+    const [cmtList, setCmtList] = useState([{index:"",post_index:"", id:"", name:"", content :"",date:""}]);
     const comment = useRef() as RefObject<HTMLFormElement>;
     const textarea = useRef() as RefObject<HTMLTextAreaElement>;
     const reviewChk = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         e.target.value.length < 3 ? setDisabled(true) : setDisabled(false);
     };
 
-    const submitChk = (e:React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
+    // 댓글 관련 기능
+    // useEffect(() => {
         
+    // }, [cmtList]);
+    const getCmt = (post_index:string) => {
+        axios
+            .get(
+                process.env.REACT_APP_ip + `/board/comment?index=${post_index}`
+            )
+            .then((res) => {
+                setCmtList(res.data);
+                console.log(res.data)
+            });
+        console.log(cmtList);
+    };
+
+    const cmtDelete = (cmtIndex:string,post_index:string) => {
+        if (window.confirm("댓글을 삭제하시겠습니까?") === true) {
+            axios
+                .delete(
+                    process.env.REACT_APP_ip + `/board/comment?index=${cmtIndex}`
+                )
+                .then((res) => {
+                    console.log(res);
+                    alert("삭제되었습니다.");
+                    getCmt(post_index);
+                })
+                .catch((e) => {
+                    console.error(e);
+                });
+        } else {
+            return;
+        }
+    };
+
+    const submitChk = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        axios
+            .post(process.env.REACT_APP_ip + "/board/comment", {
+                post_index: elTarget.index,
+                content: textarea.current!.value,
+            })
+            .then((res) => {
+                console.log(res);
+                getCmt(elTarget.index);
+            })
+            .catch((e) => {
+                console.error(e);
+            });
         setDisabled(true);
     };
 
@@ -327,23 +380,29 @@ const Main = () => {
                                 <ModalCont>
                                     <div>{elTarget.photo_desc}</div>
                                     <ul>
-                                        <li>
-                                            <p className="comment_writer">
-                                                닉네임
-                                            </p>
-                                            <div className="comment_cont">
-                                                <p>댓글 내용</p>
-                                                <div>
-                                                    <span>2022.11.11</span>
-                                                    <span className="comment_update">
-                                                        수정
-                                                    </span>
-                                                    <span className="comment_delete">
-                                                        삭제
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </li>
+                                        {
+                                            cmtList.map((el, i)=>{
+                                                return (
+                                                    <li key={i}>
+                                                        <p className="comment_writer">
+                                                            {el.name}
+                                                        </p>
+                                                        <div className="comment_cont">
+                                                            <p>{el.content}</p>
+                                                            <div>
+                                                                <span>
+                                                                    {el.date}
+                                                                </span>
+                                                                
+                                                                <span onClick={()=>{cmtDelete(el.index,el.post_index)}} className="comment_delete">
+                                                                    삭제
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                );
+                                            })
+                                        }
                                     </ul>
                                 </ModalCont>
                             </div>
@@ -354,7 +413,7 @@ const Main = () => {
                                         onChange={reviewChk}
                                         as="textarea"
                                         placeholder="댓글 달기..."
-                                    />
+                                    ></FormControl>
                                     <Button
                                         variant="dark"
                                         onClick={submitChk}
@@ -379,11 +438,12 @@ const Main = () => {
                             <Figure
                                 onClick={() => {
                                     setElTarget(el);
+                                    getCmt(el.index);
                                     setLgShow(true);
                                 }}
                                 key={i}
                             >
-                                <img src="./image/login_bg.jpg" alt="" />
+                                <img src="./image/login_bg.jpg" alt="사진" />
                                 <figcaption>{el.photo_date}</figcaption>
                             </Figure>
                         );

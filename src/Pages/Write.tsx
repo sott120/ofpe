@@ -115,7 +115,7 @@ const Write = () => {
             alert("사용한 필름을 선택해주세요.");
             usedFilm.current!.focus();
         } else {
-            axios
+            if(sbmitBtn.current!.innerText === "찰칵!"){axios
                 .post(process.env.REACT_APP_ip + "/board", {
                     photo_name: photoName.current!.value,
                     photo_date: photoDate.current!.value,
@@ -131,7 +131,24 @@ const Write = () => {
                 .catch((e) => {
                     console.error(e);
                 });
-        }
+        }else if(sbmitBtn.current!.innerText === "수정하기"){
+            axios.put(process.env.REACT_APP_ip + "/board", {
+                    index: state.index,
+                    photo_name: photoName.current!.value,
+                    photo_date: photoDate.current!.value,
+                    photo_place: photoPlace.current!.value,
+                    used_camera: usedCamera.current!.value,
+                    used_film: usedFilm.current!.value,
+                    other_film: otherFilm.current!.value,
+                    photo_desc: photoDesc.current!.value,
+                })
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((e) => {
+                    console.error(e);
+                });
+        }}
         setDisabled(false);
     };
 
@@ -245,9 +262,7 @@ const Write = () => {
                         placeholder="작품에 대한 내용을 자유롭게 적어주세요"
                     />
                 </Form.Group>
-                <Button variant="dark" ref={sbmitBtn} onClick={allChk} disabled={disabled}>
-                    찰칵!
-                </Button>
+                <Button variant="dark" ref={sbmitBtn} onClick={allChk} disabled={disabled}></Button>
             </Form2>
         </Container>
     );
