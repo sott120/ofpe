@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, FloatingLabel } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useState, useRef, RefObject } from 'react';
+import axios from 'axios';
 
 const LoginWrap = styled.div`
   width: 100%;
@@ -180,6 +181,16 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
     const idPattern = /^[a-zA-Z0-9]{5,20}$/g;
     const id = idRef.current!.value;
     let copy = { ...passBtn };
+    //아이디 서버로 보내서 확인하기
+    axios
+      .post(process.env.REACT_APP_ip + '/member/id', { id: id })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+
     if (!idPattern.test(id) && id !== '') {
       setIdTxt(chkIdCont[1]);
       copy.id = false;
@@ -188,6 +199,9 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
       setIdTxt(chkIdCont[2]);
       copy.id = false;
       setPassBtn(copy);
+      // } else if () {
+      //     setIdTxt(chkIdCont[3]);
+      //     copy.id = false;
     } else if (idPattern.test(id)) {
       setIdTxt(chkIdCont[4]);
       copy.id = true;

@@ -102,7 +102,7 @@ app.delete('/board/comment', (req, res) => {
 });
 
 // 회원가입
-app.post('/board/member', (req, res) => {
+app.post('/member', (req, res) => {
   let { id, name, pw, salt } = req.body;
   let joinQuery = 'INSERT INTO `user` (id, name, pw, salt) VALUES (?,?,?,?)';
   db.query(joinQuery, [id, name, pw, salt], (err, result) => {
@@ -112,7 +112,18 @@ app.post('/board/member', (req, res) => {
 });
 
 // 회원가입 아이디 중복검사
-app.post;
+app.post('/member/id', (req, res) => {
+  let id = req.body.id;
+  let idChkQuery = 'select id from user where id=?';
+  db.query(idChkQuery, [id], (err, result) => {
+    console.log(result);
+    if (result.length == 0) {
+      console.log('중복없음');
+    } else {
+      console.log('중복있음');
+    }
+  });
+});
 
 app.listen(8080, () => {
   console.log('열림zzz');
