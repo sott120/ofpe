@@ -142,6 +142,7 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
 const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
   const [disabled, setDisabled] = useState(false);
   const [passBtn, setPassBtn] = useState({ id: false, name: false, pw: false, pwchk: false });
+  const [getId, setGetId] = useState(false);
   const idRef = useRef() as RefObject<HTMLInputElement>;
   const nameRef = useRef() as RefObject<HTMLInputElement>;
   const pwRef = useRef() as RefObject<HTMLInputElement>;
@@ -186,27 +187,27 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
       .post(process.env.REACT_APP_ip + '/member/id', { id: id })
       .then((res) => {
         console.log(res);
+        if (!idPattern.test(id) && id !== '') {
+          setIdTxt(chkIdCont[1]);
+          copy.id = false;
+          setPassBtn(copy);
+        } else if (!idPattern.test(id) && id === '') {
+          setIdTxt(chkIdCont[2]);
+          copy.id = false;
+          setPassBtn(copy);
+        } else if (res.data === false) {
+          setIdTxt(chkIdCont[3]);
+          copy.id = false;
+          setPassBtn(copy);
+        } else if (idPattern.test(id) && res.data === true && id !== '') {
+          setIdTxt(chkIdCont[4]);
+          copy.id = true;
+          setPassBtn(copy);
+        }
       })
       .catch((e) => {
         console.error(e);
       });
-
-    if (!idPattern.test(id) && id !== '') {
-      setIdTxt(chkIdCont[1]);
-      copy.id = false;
-      setPassBtn(copy);
-    } else if (!idPattern.test(id) && id === '') {
-      setIdTxt(chkIdCont[2]);
-      copy.id = false;
-      setPassBtn(copy);
-      // } else if () {
-      //     setIdTxt(chkIdCont[3]);
-      //     copy.id = false;
-    } else if (idPattern.test(id)) {
-      setIdTxt(chkIdCont[4]);
-      copy.id = true;
-      setPassBtn(copy);
-    }
   };
   const chkName = () => {
     const namePattern = /^[a-zA-Z가-힣]{2,10}$/g;

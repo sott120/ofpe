@@ -116,11 +116,10 @@ app.post('/member/id', (req, res) => {
   let id = req.body.id;
   let idChkQuery = 'select id from user where id=?';
   db.query(idChkQuery, [id], (err, result) => {
-    console.log(result);
     if (result.length == 0) {
-      console.log('중복없음');
+      res.status(200).json(true);
     } else {
-      console.log('중복있음');
+      res.status(200).json(false);
     }
   });
 });
