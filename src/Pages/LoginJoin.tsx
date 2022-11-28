@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, FloatingLabel } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useState, useRef, RefObject } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const LoginWrap = styled.div`
@@ -140,9 +141,9 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
 };
 
 const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
+  let navigate = useNavigate();
   const [disabled, setDisabled] = useState(false);
   const [passBtn, setPassBtn] = useState({ id: false, name: false, pw: false, pwchk: false });
-  const [getId, setGetId] = useState(false);
   const idRef = useRef() as RefObject<HTMLInputElement>;
   const nameRef = useRef() as RefObject<HTMLInputElement>;
   const pwRef = useRef() as RefObject<HTMLInputElement>;
@@ -213,19 +214,31 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
     const namePattern = /^[a-zA-Z가-힣]{2,10}$/g;
     const name = nameRef.current!.value;
     let copy = { ...passBtn };
-    if (!namePattern.test(name) && name !== '') {
-      setNameTxt(chkNameCont[1]);
-      copy.name = false;
-      setPassBtn(copy);
-    } else if (!namePattern.test(name) && name === '') {
-      setNameTxt(chkNameCont[2]);
-      copy.name = false;
-      setPassBtn(copy);
-    } else if (namePattern.test(name)) {
-      setNameTxt(chkNameCont[4]);
-      copy.name = true;
-      setPassBtn(copy);
-    }
+    //아이디 서버로 보내서 확인하기
+    axios
+      .post(process.env.REACT_APP_ip + '/member/name', { name: name })
+      .then((res) => {
+        if (!namePattern.test(name) && name !== '') {
+          setNameTxt(chkNameCont[1]);
+          copy.name = false;
+          setPassBtn(copy);
+        } else if (!namePattern.test(name) && name === '') {
+          setNameTxt(chkNameCont[2]);
+          copy.name = false;
+          setPassBtn(copy);
+        } else if (res.data === false) {
+          setNameTxt(chkNameCont[3]);
+          copy.name = false;
+          setPassBtn(copy);
+        } else if (namePattern.test(name) && res.data === true && name !== '') {
+          setNameTxt(chkNameCont[4]);
+          copy.name = true;
+          setPassBtn(copy);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   };
   const chkPw = () => {
     const pwPattern = /^[a-zA-Z0-9~!@#$%^&*()_+|<>?:{}]{4,16}$/g;
@@ -264,6 +277,9 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
   };
 
   const passChk = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const id = pwRef.current!.value;
+    const name = nameRef.current!.value;
+    const pw = pwRef.current!.value;
     e.preventDefault();
     setDisabled(true);
     if (passBtn.id === false) {
@@ -279,7 +295,15 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
       alert('비밀번호가 일치하지 않습니다.');
       pwchkRef.current!.focus();
     } else {
-      console.log('통과');
+      axios
+        .post(process.env.REACT_APP_ip + '/member', { id: id, name: name, pw: pw })
+        .then((res) => {
+          alert('회원가입이 완료되었습니다.');
+          navigate('/login');
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     }
     setDisabled(false);
   };

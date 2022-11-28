@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import db from './db.js';
 import cors from 'cors';
 import { send } from 'process';
+import crypto from 'crypto';
 
 const app = express();
 app.use(cors());
@@ -101,16 +102,6 @@ app.delete('/board/comment', (req, res) => {
   });
 });
 
-// 회원가입
-app.post('/member', (req, res) => {
-  let { id, name, pw, salt } = req.body;
-  let joinQuery = 'INSERT INTO `user` (id, name, pw, salt) VALUES (?,?,?,?)';
-  db.query(joinQuery, [id, name, pw, salt], (err, result) => {
-    console.log(err);
-    res.status(200).json('회원가입완료');
-  });
-});
-
 // 회원가입 아이디 중복검사
 app.post('/member/id', (req, res) => {
   let id = req.body.id;
@@ -121,6 +112,34 @@ app.post('/member/id', (req, res) => {
     } else {
       res.status(200).json(false);
     }
+  });
+});
+
+// 회원가입 아이디 중복검사
+app.post('/member/name', (req, res) => {
+  let name = req.body.name;
+  let nameChkQuery = 'select name from user where name=?';
+  db.query(nameChkQuery, [name], (err, result) => {
+    if (result.length == 0) {
+      res.status(200).json(true);
+    } else {
+      res.status(200).json(false);
+    }
+  });
+});
+
+// 회원가입
+app.post('/member', (req, res) => {
+  let { id, name, pw } = req.body;
+  const salt = crypto.randomBytes(32).toString('hex');
+  const hash = hashTest(pw);
+  function hashTest(pw: crypto.BinaryLike) {
+    return crypto.pbkdf2Sync(pw, salt, 1, 32, 'sha512').toString('hex');
+  }
+  let joinQuery = 'INSERT INTO `user` (id, name, pw, salt) VALUES (?,?,?,?)';
+  db.query(joinQuery, [id, name, hash, salt], (err, result) => {
+    console.log(err);
+    res.status(200).json('회원가입완료');
   });
 });
 
