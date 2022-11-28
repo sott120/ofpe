@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, Container } from 'react-bootstrap';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import ReactS3Client from 'react-aws-s3-typescript';
 
 interface ImgDisplayItf {
   imgBase64: string;
@@ -117,6 +118,7 @@ const Write = () => {
           .post(process.env.REACT_APP_ip + '/board', {
             photo_name: photoName.current!.value,
             photo_date: photoDate.current!.value,
+            photo_url: uploadFile(imgFile),
             photo_place: photoPlace.current!.value,
             used_camera: usedCamera.current!.value,
             used_film: usedFilm.current!.value,
@@ -167,6 +169,30 @@ const Write = () => {
     }
   };
 
+  const config = {
+    bucketName: process.env.REACT_APP_BUCKET_NAME as string,
+    dirName: process.env.REACT_APP_DIRNAME as string,
+    region: process.env.REACT_APP_REGION as string,
+    accessKeyId: process.env.REACT_APP_ACCESS as string,
+    secretAccessKey: process.env.REACT_APP_SECRET as string,
+    s3Url: process.env.REACT_APP_S3_URL as string,
+  };
+
+  //이미지 저장
+  const uploadFile = async (file: any) => {
+    console.log(file);
+    console.log(config);
+
+    const S3 = new ReactS3Client(config);
+    // the name of the file uploaded is used to upload it to S3
+    S3.uploadFile(file, file.name)
+      .then((data: any) => {
+        console.log(data);
+        console.log(data.location);
+        return data.location;
+      })
+      .catch((err: any) => console.error(err));
+  };
   return (
     <Container>
       <Form2 className='mt-5 mb-5'>
