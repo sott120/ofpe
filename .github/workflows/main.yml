@@ -16,7 +16,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          sudo chown -R ec2-user ./ofpe
+          sudo chown -R ec2-user ./OFPE
           cd ofpe
           sudo git pull
           npm i
@@ -30,7 +30,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          sudo chown -R ec2-user ./ofpe
+          sudo chown -R ec2-user ./OFPE
           sudo systemctl stop nginx
           sudo systemctl stop mysqld
           sudo systemctl start nginx
