@@ -16,13 +16,6 @@ db.connect((err) => {
   }
 });
 
-app.post('/api/test', (req, res) => {
-  console.log(req.body);
-  db.query('SELECT * FROM user', [], (err, result) => {
-    res.status(200).json(result);
-  });
-});
-
 // 전체 게시글 불러오기
 app.get('/board', (req, res) => {
   const showQuery = 'SELECT *FROM posting;';
