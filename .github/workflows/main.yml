@@ -30,12 +30,12 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.PORT }}
         script: |
+          sudo chown -R ec2-user ./ofpe
           sudo systemctl stop nginx
           sudo systemctl stop mysqld
           sudo systemctl start nginx
           sudo systemctl start mysqld
           
-          sudo chown -R ec2-user ./ofpe
           cd ofpe
           npx pm2 install typescript
           npx pm2 stop server
