@@ -197,7 +197,7 @@ const Write = () => {
     <Container>
       <Form2 className='mt-5 mb-5'>
         <Form.Group className='mb-4'>
-          <Form.Label>필름카메라로 찍은 사진을 올려주세요.</Form.Label>
+          <Form.Label>필름카메라로 찍은 사진을 올려주세요!</Form.Label>
           <ImgPreview
             imgBase64={imgBase64}
             onClick={() => {
