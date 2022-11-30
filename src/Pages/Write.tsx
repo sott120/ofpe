@@ -3,7 +3,7 @@ import { useState, useRef, RefObject, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, Container } from 'react-bootstrap';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ReactS3Client from 'react-aws-s3-typescript';
 
 interface ImgDisplayItf {
@@ -59,6 +59,7 @@ const FormControl = styled(Form.Control)<SelectItf>`
 
 const Write = () => {
   const { state } = useLocation();
+  let navigate = useNavigate();
   console.log(state);
 
   const [imgBase64, setImgBase64] = useState(''); // 파일 base64
@@ -79,6 +80,7 @@ const Write = () => {
     if (state) {
       photoName.current!.value = state.photo_name;
       photoDate.current!.value = state.photo_date;
+      setImgBase64(state.photo_url);
       photoPlace.current!.value = state.photo_place;
       usedCamera.current!.value = state.used_camera;
       usedFilm.current!.value = state.used_film;
@@ -89,70 +91,6 @@ const Write = () => {
       sbmitBtn.current!.innerText = '찰칵!';
     }
   }, []);
-
-  const allChk = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setDisabled(true);
-    if (imgInput.current!.value === '') {
-      alert('사진을 골라주세요.');
-      imgInput.current!.focus();
-      console.log(photoDesc.current!.value);
-    } else if (photoName.current!.value === '') {
-      alert('작품 이름을 적어주세요.');
-      photoName.current!.focus();
-    } else if (photoDate.current!.value === '') {
-      alert('촬영 날짜를 설정해주세요.');
-      photoDate.current!.focus();
-    } else if (photoPlace.current!.value === '') {
-      alert('촬영 장소를 적어주세요.');
-      photoPlace.current!.focus();
-    } else if (usedCamera.current!.value === '') {
-      alert('시용한 카메라 기종을 적어주세요.');
-      usedCamera.current!.focus();
-    } else if (usedFilm.current!.value === '') {
-      alert('사용한 필름을 선택해주세요.');
-      usedFilm.current!.focus();
-    } else {
-      if (sbmitBtn.current!.innerText === '찰칵!') {
-        axios
-          .post(process.env.REACT_APP_ip + '/board', {
-            photo_name: photoName.current!.value,
-            photo_date: photoDate.current!.value,
-            photo_url: uploadFile(imgFile),
-            photo_place: photoPlace.current!.value,
-            used_camera: usedCamera.current!.value,
-            used_film: usedFilm.current!.value,
-            other_film: otherFilm.current!.value,
-            photo_desc: photoDesc.current!.value,
-          })
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((e) => {
-            console.error(e);
-          });
-      } else if (sbmitBtn.current!.innerText === '수정하기') {
-        axios
-          .put(process.env.REACT_APP_ip + '/board', {
-            index: state.index,
-            photo_name: photoName.current!.value,
-            photo_date: photoDate.current!.value,
-            photo_place: photoPlace.current!.value,
-            used_camera: usedCamera.current!.value,
-            used_film: usedFilm.current!.value,
-            other_film: otherFilm.current!.value,
-            photo_desc: photoDesc.current!.value,
-          })
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((e) => {
-            console.error(e);
-          });
-      }
-    }
-    setDisabled(false);
-  };
 
   const handleChangeFile = (e: any) => {
     let reader = new FileReader();
@@ -169,6 +107,8 @@ const Write = () => {
     }
   };
 
+  //이미지 저장
+
   const config = {
     bucketName: process.env.REACT_APP_BUCKET_NAME as string,
     dirName: process.env.REACT_APP_DIRNAME as string,
@@ -178,18 +118,128 @@ const Write = () => {
     s3Url: process.env.REACT_APP_S3_URL as string,
   };
 
-  //이미지 저장
+  const allChk = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setDisabled(true);
+    if (imgBase64 === '') {
+      alert('사진을 골라주세요.');
+      imgInput.current!.focus();
+      console.log(photoDesc.current!.value);
+    } else if (photoName.current!.value === '') {
+      alert('작품 이름을 적어주세요.');
+      photoName.current!.focus();
+    } else if (photoDate.current!.value === '') {
+      alert('촬영 날짜를 설정해주세요.');
+      photoDate.current!.focus();
+    } else if (photoPlace.current!.value === '') {
+      alert('촬영 장소를 적어주세요.');
+      photoPlace.current!.focus();
+    } else if (usedCamera.current!.value === '') {
+      alert('사용한 카메라 기종을 적어주세요.');
+      usedCamera.current!.focus();
+    } else if (usedFilm.current!.value === '') {
+      alert('사용한 필름을 선택해주세요.');
+      usedFilm.current!.focus();
+    } else {
+      if (sbmitBtn.current!.innerText === '찰칵!') {
+        uploadFile(imgFile);
+      } else if (sbmitBtn.current!.innerText === '수정하기' && imgInput.current!.value === '') {
+        axios
+          .put(process.env.REACT_APP_ip + '/board', {
+            index: state.index,
+            photo_name: photoName.current!.value,
+            photo_date: photoDate.current!.value,
+            photo_url: imgBase64,
+            photo_place: photoPlace.current!.value,
+            used_camera: usedCamera.current!.value,
+            used_film: usedFilm.current!.value,
+            other_film: otherFilm.current!.value,
+            photo_desc: photoDesc.current!.value,
+          })
+          .then((res) => {
+            console.log(res);
+            navigate('/');
+            alert('수정되었습니다.');
+          })
+          .catch((e) => {
+            console.error(e);
+          });
+      } else if (sbmitBtn.current!.innerText === '수정하기' && imgInput.current!.value !== '') {
+        updateFile(imgFile);
+      }
+    }
+    setDisabled(false);
+  };
+
+  //s3전송하고 Post하는 함수
   const uploadFile = async (file: any) => {
     console.log(file);
     console.log(config);
-
     const S3 = new ReactS3Client(config);
-    // the name of the file uploaded is used to upload it to S3
+
     S3.uploadFile(file, file.name)
       .then((data: any) => {
         console.log(data);
         console.log(data.location);
         return data.location;
+      })
+      .then((res: any) => {
+        axios
+          .post(process.env.REACT_APP_ip + '/board', {
+            photo_name: photoName.current!.value,
+            photo_date: photoDate.current!.value,
+            photo_url: res,
+            photo_place: photoPlace.current!.value,
+            used_camera: usedCamera.current!.value,
+            used_film: usedFilm.current!.value,
+            other_film: otherFilm.current!.value,
+            photo_desc: photoDesc.current!.value,
+          })
+          .then((res) => {
+            console.log(res);
+            navigate('/');
+            alert('사진을 전시했습니다!');
+          })
+          .catch((e) => {
+            console.error(e);
+          });
+      })
+      .catch((err: any) => console.error(err));
+  };
+
+  //s3 전송하고 Update하는 함수
+  const updateFile = async (file: any) => {
+    console.log(file);
+    console.log(config);
+    const S3 = new ReactS3Client(config);
+
+    S3.uploadFile(file, file.name)
+      .then((data: any) => {
+        console.log(data);
+        console.log(data.location);
+        return data.location;
+      })
+      .then((res: any) => {
+        axios
+          .put(process.env.REACT_APP_ip + '/board', {
+            index: state.index,
+            photo_name: photoName.current!.value,
+            photo_date: photoDate.current!.value,
+            photo_url: res,
+            photo_place: photoPlace.current!.value,
+            used_camera: usedCamera.current!.value,
+            used_film: usedFilm.current!.value,
+            other_film: otherFilm.current!.value,
+            photo_desc: photoDesc.current!.value,
+          })
+          .then((res) => {
+            console.log(res);
+            navigate('/');
+            alert('수정되었습니다.');
+          })
+          .catch((e) => {
+            console.error(e);
+          });
       })
       .catch((err: any) => console.error(err));
   };
