@@ -310,7 +310,7 @@ const Main = () => {
           <ModalInner>
             <section>
               <img
-                src='/image/login_bg.jpg'
+                src={elTarget.photo_url}
                 alt=''
                 width='100%'
               />
@@ -423,7 +423,7 @@ const Main = () => {
                 key={i}
               >
                 <img
-                  src='./image/login_bg.jpg'
+                  src={el.photo_url}
                   alt='사진'
                 />
                 <figcaption>{el.photo_date}</figcaption>
