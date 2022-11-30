@@ -26,12 +26,12 @@ app.get('/board', (req, res) => {
 
 // 게시글 작성
 app.post('/board', (req, res) => {
-  let { photo_name, photo_date, photo_place, used_camera, used_film, other_film, photo_desc } = req.body;
+  let { photo_name, photo_date, photo_url, photo_place, used_camera, used_film, other_film, photo_desc } = req.body;
   let writeQuery =
-    'INSERT INTO `posting`(create_date,photo_name,photo_date,photo_place,used_camera,used_film,other_film,photo_desc) VALUES (curdate(),?,?,?,?,?,?,?)';
+    'INSERT INTO `posting`(create_date,photo_name,photo_date,photo_url,photo_place,used_camera,used_film,other_film,photo_desc) VALUES (curdate(),?,?,?,?,?,?,?,?)';
   db.query(
     writeQuery,
-    [photo_name, photo_date, photo_place, used_camera, used_film, other_film, photo_desc],
+    [photo_name, photo_date, photo_url, photo_place, used_camera, used_film, other_film, photo_desc],
     (err, result) => {
       console.log(err);
       res.status(200).json('등록완료');
@@ -41,12 +41,13 @@ app.post('/board', (req, res) => {
 
 // 게시글 수정
 app.put('/board', (req, res) => {
-  let { index, photo_name, photo_date, photo_place, used_camera, used_film, other_film, photo_desc } = req.body;
+  let { index, photo_name, photo_date, photo_url, photo_place, used_camera, used_film, other_film, photo_desc } =
+    req.body;
   let updateQuery =
-    'UPDATE `posting` SET photo_name=?, photo_date=?, photo_place=?, used_camera=?, used_film=?, other_film=?, photo_desc=? WHERE `index` = ? ';
+    'UPDATE `posting` SET photo_name=?, photo_date=?, photo_url=?, photo_place=?, used_camera=?, used_film=?, other_film=?, photo_desc=? WHERE `index` = ? ';
   db.query(
     updateQuery,
-    [photo_name, photo_date, photo_place, used_camera, used_film, other_film, photo_desc, index],
+    [photo_name, photo_date, photo_url, photo_place, used_camera, used_film, other_film, photo_desc, index],
     (err, result) => {
       console.log(err);
       res.status(200).json('수정했따');
@@ -91,7 +92,7 @@ app.delete('/board/comment', (req, res) => {
   let deleteQuery = 'DELETE FROM `comment` WHERE `index` = ?';
   db.query(deleteQuery, [index], (err, result) => {
     console.log(err);
-    res.status(200).json('삭제완료');
+    res.status(200).json('댓글삭제완료');
   });
 });
 
