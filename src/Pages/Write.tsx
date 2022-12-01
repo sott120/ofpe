@@ -5,6 +5,7 @@ import { Button, Form, Container } from 'react-bootstrap';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ReactS3Client from 'react-aws-s3-typescript';
+import imageCompression from 'browser-image-compression';
 
 interface ImgDisplayItf {
   imgBase64: string;
@@ -62,8 +63,8 @@ const Write = () => {
   let navigate = useNavigate();
   console.log(state);
 
-  const [imgBase64, setImgBase64] = useState(''); // 파일 base64
-  const [imgFile, setImgFile] = useState(null); //파일
+  const [imgBase64, setImgBase64] = useState(''); // 파일 url
+  const [imgFile, setImgFile] = useState({}); //파일전체 정보
   const [selectOption, setSelectOption] = useState('');
   const [disabled, setDisabled] = useState(false);
   const imgInput = useRef() as RefObject<HTMLInputElement>;
@@ -92,31 +93,35 @@ const Write = () => {
     }
   }, []);
 
-  const handleChangeFile = (e: any) => {
-    let reader = new FileReader();
-    reader.onloadend = () => {
-      // 2. 읽기가 완료되면 아래코드가 실행됩니다.
-      const base64 = reader.result;
-      if (base64) {
-        setImgBase64(base64.toString()); // 파일 base64 상태 업데이트
+  //이미지 리사이징 후 미리보기 띄우기
+  const handleChangeFile = async (e: any) => {
+    let file = e.target.files[0];
+    const fileChk = /(.*?)\.(jpg|jpeg|png)$/;
+
+    if (file.name.match(fileChk)) {
+      //파일 리사이징 옵션
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+      };
+      try {
+        const compressedFile = await imageCompression(file, options);
+        setImgFile(compressedFile);
+        // resize된 이미지의 url을 받아 fileUrl에 저장
+        const promise = imageCompression.getDataUrlFromFile(compressedFile);
+        promise.then((result) => {
+          setImgBase64(result);
+        });
+      } catch (error) {
+        console.log(error);
       }
-    };
-    if (e.target.files[0]) {
-      reader.readAsDataURL(e.target.files[0]); // 1. 파일을 읽어 버퍼에 저장합니다.
-      setImgFile(e.target.files[0]); // 파일 상태 업데이트
+    } else {
+      alert('jpg, jpeg, png 형식의 파일만 업로드 가능합니다.');
+      imgInput.current!.value = '';
     }
   };
 
   //이미지 저장
-
-  const config = {
-    bucketName: process.env.REACT_APP_BUCKET_NAME as string,
-    dirName: process.env.REACT_APP_DIRNAME as string,
-    region: process.env.REACT_APP_REGION as string,
-    accessKeyId: process.env.REACT_APP_ACCESS as string,
-    secretAccessKey: process.env.REACT_APP_SECRET as string,
-    s3Url: process.env.REACT_APP_S3_URL as string,
-  };
 
   const allChk = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -169,6 +174,15 @@ const Write = () => {
       }
     }
     setDisabled(false);
+  };
+
+  const config = {
+    bucketName: process.env.REACT_APP_BUCKET_NAME as string,
+    dirName: process.env.REACT_APP_DIRNAME as string,
+    region: process.env.REACT_APP_REGION as string,
+    accessKeyId: process.env.REACT_APP_ACCESS as string,
+    secretAccessKey: process.env.REACT_APP_SECRET as string,
+    s3Url: process.env.REACT_APP_S3_URL as string,
   };
 
   //s3전송하고 Post하는 함수
@@ -259,6 +273,7 @@ const Write = () => {
           <Form.Control
             ref={imgInput}
             type='file'
+            accept='image/jpg, image/png, image/jpeg'
             onChange={handleChangeFile}
           />
         </Form.Group>
