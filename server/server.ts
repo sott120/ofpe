@@ -99,7 +99,7 @@ app.delete('/board/comment', (req, res) => {
 // 회원가입 아이디 중복검사
 app.post('/member/id', (req, res) => {
   let id = req.body.id;
-  let idChkQuery = 'select id from user where id=?';
+  let idChkQuery = 'SELECT id FROM user WHERE id=?';
   db.query(idChkQuery, [id], (err, result) => {
     if (result.length == 0) {
       res.status(200).json(true);
@@ -112,7 +112,7 @@ app.post('/member/id', (req, res) => {
 // 회원가입 아이디 중복검사
 app.post('/member/name', (req, res) => {
   let name = req.body.name;
-  let nameChkQuery = 'select name from user where name=?';
+  let nameChkQuery = 'SELECT name FROM user WHERE name=?';
   db.query(nameChkQuery, [name], (err, result) => {
     if (result.length == 0) {
       res.status(200).json(true);
@@ -137,6 +137,26 @@ app.post('/member', (req, res) => {
   });
 });
 
+// 로그인 아이디 조회
+app.post('/login', (req, res) => {
+  let id = req.body.id; //로그인 받아온 id
+  let pw = req.body.pw; //로그인 받아온 pw
+  let idChkQuery = 'SELECT * FROM user WHERE id=?';
+  db.query(idChkQuery, [id], (err, result) => {
+    let salt = result[0].salt;
+    let dbPw = result[0].pw;
+    let hash = hashTest(pw);
+    function hashTest(pw: crypto.BinaryLike) {
+      return crypto.pbkdf2Sync(pw, salt, 1, 32, 'sha512').toString('hex');
+    }
+    if (result[0]) {
+      console.log(dbPw, hash);
+    } else if (!result[0]) {
+      res.status(200).json(false);
+    }
+  });
+});
+
 app.listen(8080, () => {
-  console.log('열림zzz');
+  console.log('열림');
 });

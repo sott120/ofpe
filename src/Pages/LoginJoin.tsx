@@ -64,6 +64,7 @@ const FormTxt = styled(Form.Text)<FormTxtItf>`
 interface StyledProps extends LoginBoxItf, FormTxtItf {}
 
 const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
+  let navigate = useNavigate();
   const [disabled, setDisabled] = useState(false);
   const goId = useRef() as RefObject<HTMLInputElement>;
   const goPw = useRef() as RefObject<HTMLInputElement>;
@@ -76,6 +77,19 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
     } else if (goPw.current!.value === '') {
       alert('비밀번호를 입력해주세요.');
       goPw.current!.focus();
+    } else if (goId.current!.value !== '' && goPw.current!.value !== '') {
+      axios
+        .post(process.env.REACT_APP_ip + '/login', { id: goId.current!.value, pw: goPw.current!.value })
+        .then((res) => {
+          if (res.data == false) {
+            alert('아이디 또는 비밀번호가 일치하지 않습니다.');
+          } else {
+            navigate('/');
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     }
     setDisabled(false);
   }
@@ -277,7 +291,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
   };
 
   const passChk = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const id = pwRef.current!.value;
+    const id = idRef.current!.value;
     const name = nameRef.current!.value;
     const pw = pwRef.current!.value;
     e.preventDefault();
