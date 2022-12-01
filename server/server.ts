@@ -142,15 +142,19 @@ app.post('/login', (req, res) => {
   let id = req.body.id; //로그인 받아온 id
   let pw = req.body.pw; //로그인 받아온 pw
   let idChkQuery = 'SELECT * FROM user WHERE id=?';
+  let hashTest = (pw: crypto.BinaryLike, salt: crypto.BinaryLike) => {
+    return crypto.pbkdf2Sync(pw, salt, 1, 32, 'sha512').toString('hex');
+  };
   db.query(idChkQuery, [id], (err, result) => {
-    let salt = result[0].salt;
-    let dbPw = result[0].pw;
-    let hash = hashTest(pw);
-    function hashTest(pw: crypto.BinaryLike) {
-      return crypto.pbkdf2Sync(pw, salt, 1, 32, 'sha512').toString('hex');
-    }
     if (result[0]) {
-      console.log(dbPw, hash);
+      let salt = result[0].salt;
+      let dbPw = result[0].pw;
+      let hash = hashTest(pw, salt);
+      if (dbPw === hash) {
+        res.status(200).json(result);
+      } else if (dbPw !== hash) {
+        res.status(200).json(false);
+      }
     } else if (!result[0]) {
       res.status(200).json(false);
     }
