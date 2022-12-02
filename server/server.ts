@@ -3,10 +3,23 @@ import db from './db.js';
 import cors from 'cors';
 import { send } from 'process';
 import crypto from 'crypto';
+import cookieParser from 'cookie-parser';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import path from 'path';
+const __dirname = path.resolve();
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  }),
+);
 app.use(express.json());
+app.use(cookieParser());
+const SECRET_KEY = process.env.SECRET_KEY as string;
 
 db.connect((err) => {
   if (err) {
@@ -150,7 +163,21 @@ app.post('/login', (req, res) => {
       let salt = result[0].salt;
       let dbPw = result[0].pw;
       let hash = hashTest(pw, salt);
+      //로그인 성공 조건
       if (dbPw === hash) {
+        console.log('로그인성공');
+        const token = jwt.sign(
+          {
+            type: 'JWT',
+            id: result[0].id,
+          },
+          SECRET_KEY,
+          {
+            expiresIn: '15m', // 만료시간 15분
+          },
+        );
+        res.cookie('user', result[0].id);
+        res.cookie('token', token);
         res.status(200).json(result);
       } else if (dbPw !== hash) {
         res.status(200).json(false);

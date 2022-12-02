@@ -4,6 +4,9 @@ import styled from 'styled-components';
 import { useState, useRef, RefObject } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useCookies, Cookies } from 'react-cookie';
+
+const cookie = new Cookies();
 
 const LoginWrap = styled.div`
   width: 100%;
