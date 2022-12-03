@@ -165,7 +165,6 @@ app.post('/login', (req, res) => {
       let hash = hashTest(pw, salt);
       //로그인 성공 조건
       if (dbPw === hash) {
-        console.log('로그인성공');
         const token = jwt.sign(
           {
             type: 'JWT',
@@ -173,7 +172,7 @@ app.post('/login', (req, res) => {
           },
           SECRET_KEY,
           {
-            expiresIn: '15m', // 만료시간 15분
+            expiresIn: '60m', // 만료시간 60분
           },
         );
         res.cookie('user', result[0].id);
