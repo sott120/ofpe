@@ -167,6 +167,7 @@ app.post('/login', (req, res) => {
       if (dbPw === hash) {
         const token = jwt.sign(
           {
+            alg: 'HS256',
             type: 'JWT',
             id: result[0].id,
           },
@@ -175,8 +176,8 @@ app.post('/login', (req, res) => {
             expiresIn: '60m', // 만료시간 60분
           },
         );
-        res.cookie('user', result[0].id);
-        res.cookie('token', token);
+        res.cookie('user', result[0].id, { httpOnly: true });
+        res.cookie('token', token, { httpOnly: true });
         res.status(200).json(result);
       } else if (dbPw !== hash) {
         res.status(200).json(false);

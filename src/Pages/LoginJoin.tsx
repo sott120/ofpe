@@ -5,6 +5,9 @@ import { useState, useRef, RefObject } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCookies, Cookies } from 'react-cookie';
+import { useSelector, useDispatch } from 'react-redux';
+import { useAppDispatch } from './../store';
+import { setUser } from './../userSlice';
 
 const cookie = new Cookies();
 
@@ -68,10 +71,11 @@ interface StyledProps extends LoginBoxItf, FormTxtItf {}
 
 const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
   let navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [disabled, setDisabled] = useState(false);
   const goId = useRef() as RefObject<HTMLInputElement>;
   const goPw = useRef() as RefObject<HTMLInputElement>;
-  function goChk(e: React.MouseEvent<HTMLButtonElement>) {
+  const goChk = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setDisabled(true);
     if (goId.current!.value === '') {
@@ -87,7 +91,9 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
           if (res.data == false) {
             alert('아이디 또는 비밀번호가 일치하지 않습니다.');
           } else {
+            //로그인 성공시 코드
             navigate('/');
+            dispatch(setUser(res.data));
           }
         })
         .catch((e) => {
@@ -95,7 +101,7 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
         });
     }
     setDisabled(false);
-  }
+  };
   return (
     <LoginWrap>
       <LoginBox
