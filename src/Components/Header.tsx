@@ -6,6 +6,7 @@ import { useState, useRef } from 'react';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Masonry from 'react-masonry-css';
 import { prototype } from 'stream';
+import { useAppSelector } from '../store';
 
 const NavbarBrand = styled(Navbar.Brand)`
   cursor: pointer;
@@ -32,7 +33,18 @@ const NavbarBrand = styled(Navbar.Brand)`
 const NavLogo = styled.img``;
 
 const Header = () => {
+  let id = useAppSelector((state) => state.user.id);
   let navigate = useNavigate();
+  const logOut = () => {
+    if (window.confirm('로그아웃 하시겠습니까?') === true) {
+      axios.get(process.env.REACT_APP_ip + '/board').then((req, res) => {
+        let ck = req.headers.cookie;
+      });
+      navigate('/write');
+    } else {
+      return;
+    }
+  };
   return (
     <Navbar
       expand='sm'
@@ -54,13 +66,7 @@ const Header = () => {
           </div>
         </NavbarBrand>
         <Nav>
-          <Nav.Link
-            onClick={() => {
-              navigate('/login');
-            }}
-          >
-            로그아웃
-          </Nav.Link>
+          <Nav.Link onClick={logOut}>로그아웃</Nav.Link>
           <Button
             className='ms-3'
             onClick={() => {
