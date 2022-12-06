@@ -29,6 +29,32 @@ db.connect((err) => {
   }
 });
 
+// 토큰 확인 미들웨어
+app.use('/board', (req, res, next) => {
+  let token = req.cookies.token;
+  if (typeof token == 'string') {
+    jwt.verify(token, SECRET_KEY, (error, decoded) => {
+      if (error) {
+        console.log('토큰이 유효하지 않음');
+        res.clearCookie('user');
+        res.clearCookie('name');
+        res.clearCookie('token');
+        res.status(401).send('토큰이 유효하지 않음');
+        return;
+      } else {
+        next();
+      }
+    });
+  } else if (token == undefined) {
+    console.log('토큰이 없음');
+    res.clearCookie('user');
+    res.clearCookie('name');
+    res.clearCookie('token');
+    res.status(401).send('토큰이 없음');
+    return;
+  }
+});
+
 // 전체 게시글 불러오기
 app.get('/board', (req, res) => {
   const showQuery = 'SELECT *FROM posting;';
@@ -176,7 +202,8 @@ app.post('/login', (req, res) => {
             expiresIn: '60m', // 만료시간 60분
           },
         );
-        res.cookie('user', result[0].id, { httpOnly: true });
+        res.cookie('user', result[0].id);
+        res.cookie('name', result[0].name);
         res.cookie('token', token, { httpOnly: true });
         res.status(200).json(result);
       } else if (dbPw !== hash) {
@@ -186,6 +213,13 @@ app.post('/login', (req, res) => {
       res.status(200).json(false);
     }
   });
+});
+
+//로그아웃
+app.get('/logout', (req, res) => {
+  res.clearCookie('user');
+  res.clearCookie('name');
+  res.clearCookie('token').end();
 });
 
 app.listen(8080, () => {
