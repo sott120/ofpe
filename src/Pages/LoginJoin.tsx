@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCookies, Cookies } from 'react-cookie';
 import { useSelector, useDispatch } from 'react-redux';
-import { useAppDispatch } from './../store';
-import { setUser } from './../userSlice';
+import { useAppDispatch } from './../store/store';
+import { setUser } from './../store/userSlice';
 
 const cookie = new Cookies();
 

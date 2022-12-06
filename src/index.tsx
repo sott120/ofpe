@@ -5,21 +5,31 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { store } from './store';
-import { CookiesProvider } from 'react-cookie';
+import { store } from './store/store';
+import { CookiesProvider, Cookies } from 'react-cookie';
 import axios from 'axios';
+import { replaceUser } from './store/userSlice';
 axios.defaults.withCredentials = true;
+
+const cookies = new Cookies();
+
+let loadUser = () => {
+  console.log(cookies.get('user'));
+  let data = { id: cookies.get('user'), name: cookies.get('name') };
+  store.dispatch(replaceUser(data));
+};
+loadUser();
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <CookiesProvider>
+    <CookiesProvider>
+      <Provider store={store}>
         <BrowserRouter>
           <App />
         </BrowserRouter>
-      </CookiesProvider>
-    </Provider>
+      </Provider>
+    </CookiesProvider>
   </React.StrictMode>,
 );
 

@@ -6,7 +6,7 @@ import { useState, useRef } from 'react';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Masonry from 'react-masonry-css';
 import { prototype } from 'stream';
-import { useAppSelector } from '../store';
+import { useAppSelector } from './../store/store';
 
 const NavbarBrand = styled(Navbar.Brand)`
   cursor: pointer;
@@ -34,13 +34,13 @@ const NavLogo = styled.img``;
 
 const Header = () => {
   let id = useAppSelector((state) => state.user.id);
+
   let navigate = useNavigate();
   const logOut = () => {
     if (window.confirm('로그아웃 하시겠습니까?') === true) {
-      axios.get(process.env.REACT_APP_ip + '/board').then((req, res) => {
-        let ck = req.headers.cookie;
+      axios.get(process.env.REACT_APP_ip + '/logout').then((res) => {
+        window.location.replace('/login');
       });
-      navigate('/write');
     } else {
       return;
     }

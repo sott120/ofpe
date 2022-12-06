@@ -6,6 +6,7 @@ import { useState, useRef, RefObject } from 'react';
 import { Routes, Route, Link, useNavigate, Outlet, Navigate } from 'react-router-dom';
 import Masonry from 'react-masonry-css';
 import { useEffect } from 'react';
+import cookieErr from './../util/cookieErr';
 
 const breakpointColumnsObj = {
   default: 4,
@@ -202,9 +203,15 @@ const Main = () => {
   }, []);
 
   const getLiFunction = () => {
-    axios.get(process.env.REACT_APP_ip + '/board').then((res) => {
-      setGetList(res.data);
-    });
+    axios
+      .get(process.env.REACT_APP_ip + '/board')
+      .then((res) => {
+        setGetList(res.data);
+      })
+      .catch(() => {
+        // 아래 내용 파일로 빼서 다른 애들도 적용하기
+        cookieErr('로그인 후 이용해주세요');
+      });
   };
 
   const [elTarget, setElTarget] = useState({
