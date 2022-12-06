@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import GlobalStyles from './GlobalStyles';
+import GlobalStyles from './layout/GlobalStyles';
 import axios from 'axios';
 import { useState, useRef } from 'react';
 import { Login, Join } from './Pages/LoginJoin';
@@ -8,15 +8,19 @@ import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Layout from './layout/Layout';
 import LayoutNotHeader from './layout/LayoutNotHeader';
 import Main from './Pages/Main';
+import { useAppSelector } from './store/store';
 
 function App() {
   const [act, SetAct] = useState<boolean | null>(null);
-
+  let id = useAppSelector((state) => state.user.id);
+  let name = useAppSelector((state) => state.user.name);
   return (
     <>
       <GlobalStyles />
       {/* <Login/>
             <Join /> */}
+      <div>{id}</div>
+      <div>{name}</div>
       <Routes>
         <Route element={<Layout />}>
           <Route
