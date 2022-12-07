@@ -7,6 +7,7 @@ import { Routes, Route, Link, useNavigate, Outlet, Navigate } from 'react-router
 import Masonry from 'react-masonry-css';
 import { useEffect } from 'react';
 import cookieErr from './../util/cookieErr';
+import { useAppSelector } from './../store/store';
 
 const breakpointColumnsObj = {
   default: 4,
@@ -182,6 +183,8 @@ const ModalFt = styled.form`
 
 const Main = () => {
   const navigate = useNavigate();
+  let id = useAppSelector((state) => state.user.id);
+  let name = useAppSelector((state) => state.user.name);
   const [getList, setGetList] = useState([
     {
       index: '',
@@ -208,9 +211,8 @@ const Main = () => {
       .then((res) => {
         setGetList(res.data);
       })
-      .catch(() => {
-        // 아래 내용 파일로 빼서 다른 애들도 적용하기
-        cookieErr('로그인 후 이용해주세요');
+      .catch((e) => {
+        cookieErr(e.response.status);
       });
   };
 
@@ -243,7 +245,7 @@ const Main = () => {
           getLiFunction();
         })
         .catch((e) => {
-          console.error(e);
+          cookieErr(e.response.status);
         });
     } else {
       return;
@@ -264,10 +266,15 @@ const Main = () => {
 
   // }, [cmtList]);
   const getCmt = (post_index: string) => {
-    axios.get(process.env.REACT_APP_ip + `/board/comment?index=${post_index}`).then((res) => {
-      setCmtList(res.data);
-      console.log(res.data);
-    });
+    axios
+      .get(process.env.REACT_APP_ip + `/board/comment?index=${post_index}`)
+      .then((res) => {
+        setCmtList(res.data);
+        console.log(res.data);
+      })
+      .catch((e) => {
+        cookieErr(e.response.status);
+      });
     console.log(cmtList);
   };
 
@@ -281,7 +288,7 @@ const Main = () => {
           getCmt(post_index);
         })
         .catch((e) => {
-          console.error(e);
+          cookieErr(e.response.status);
         });
     } else {
       return;
@@ -292,6 +299,8 @@ const Main = () => {
     e.preventDefault();
     axios
       .post(process.env.REACT_APP_ip + '/board/comment', {
+        user_id: id,
+        user_name: name,
         post_index: elTarget.index,
         content: textarea.current!.value,
       })
@@ -300,7 +309,7 @@ const Main = () => {
         getCmt(elTarget.index);
       })
       .catch((e) => {
-        console.error(e);
+        cookieErr(e.response.status);
       });
     setDisabled(true);
   };

@@ -6,6 +6,8 @@ import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ReactS3Client from 'react-aws-s3-typescript';
 import imageCompression from 'browser-image-compression';
+import cookieErr from './../util/cookieErr';
+import { useAppSelector } from './../store/store';
 
 interface ImgDisplayItf {
   imgBase64: string;
@@ -61,8 +63,8 @@ const FormControl = styled(Form.Control)<SelectItf>`
 const Write = () => {
   const { state } = useLocation();
   let navigate = useNavigate();
-  console.log(state);
-
+  let id = useAppSelector((state) => state.user.id);
+  let name = useAppSelector((state) => state.user.name);
   const [imgBase64, setImgBase64] = useState(''); // 파일 url
   const [imgFile, setImgFile] = useState({}); //파일전체 정보
   const [selectOption, setSelectOption] = useState('');
@@ -167,7 +169,7 @@ const Write = () => {
             alert('수정되었습니다.');
           })
           .catch((e) => {
-            console.error(e);
+            cookieErr(e.response.status);
           });
       } else if (sbmitBtn.current!.innerText === '수정하기' && imgInput.current!.value !== '') {
         updateFile(imgFile);
@@ -200,6 +202,8 @@ const Write = () => {
       .then((res: any) => {
         axios
           .post(process.env.REACT_APP_ip + '/board', {
+            user_id: id,
+            user_name: name,
             photo_name: photoName.current!.value,
             photo_date: photoDate.current!.value,
             photo_url: res,
@@ -215,7 +219,7 @@ const Write = () => {
             alert('사진을 전시했습니다!');
           })
           .catch((e) => {
-            console.error(e);
+            cookieErr(e.response.status);
           });
       })
       .catch((err: any) => console.error(err));
@@ -252,7 +256,7 @@ const Write = () => {
             alert('수정되었습니다.');
           })
           .catch((e) => {
-            console.error(e);
+            cookieErr(e.response.status);
           });
       })
       .catch((err: any) => console.error(err));

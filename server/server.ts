@@ -39,7 +39,7 @@ app.use('/board', (req, res, next) => {
         res.clearCookie('user');
         res.clearCookie('name');
         res.clearCookie('token');
-        res.status(401).send('토큰이 유효하지 않음');
+        res.status(403).send('토큰이 유효하지 않음');
         return;
       } else {
         next();
@@ -65,12 +65,34 @@ app.get('/board', (req, res) => {
 
 // 게시글 작성
 app.post('/board', (req, res) => {
-  let { photo_name, photo_date, photo_url, photo_place, used_camera, used_film, other_film, photo_desc } = req.body;
+  let {
+    user_id,
+    photo_name,
+    user_name,
+    photo_date,
+    photo_url,
+    photo_place,
+    used_camera,
+    used_film,
+    other_film,
+    photo_desc,
+  } = req.body;
   let writeQuery =
-    'INSERT INTO `posting`(create_date,photo_name,photo_date,photo_url,photo_place,used_camera,used_film,other_film,photo_desc) VALUES (curdate(),?,?,?,?,?,?,?,?)';
+    'INSERT INTO `posting`(create_date,user_id,photo_name,create_user,photo_date,photo_url,photo_place,used_camera,used_film,other_film,photo_desc) VALUES (curdate(),?,?,?,?,?,?,?,?,?,?)';
   db.query(
     writeQuery,
-    [photo_name, photo_date, photo_url, photo_place, used_camera, used_film, other_film, photo_desc],
+    [
+      user_id,
+      photo_name,
+      user_name,
+      photo_date,
+      photo_url,
+      photo_place,
+      used_camera,
+      used_film,
+      other_film,
+      photo_desc,
+    ],
     (err, result) => {
       console.log(err);
       res.status(200).json('등록완료');
@@ -117,9 +139,9 @@ app.get('/board/comment', (req, res) => {
 
 // 댓글 작성
 app.post('/board/comment', (req, res) => {
-  let { post_index, content } = req.body;
-  let cmtWriteQuery = 'INSERT INTO `comment`(post_index, content, date) VALUES (?,?,curdate())';
-  db.query(cmtWriteQuery, [post_index, content], (err, result) => {
+  let { post_index, user_id, user_name, content } = req.body;
+  let cmtWriteQuery = 'INSERT INTO `comment`(post_index, id, name, content, date) VALUES (?,?,?,?,curdate())';
+  db.query(cmtWriteQuery, [post_index, user_id, user_name, content], (err, result) => {
     console.log(err);
     res.status(200).json('댓글등록완료');
   });
