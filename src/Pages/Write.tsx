@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ReactS3Client from 'react-aws-s3-typescript';
 import imageCompression from 'browser-image-compression';
-import cookieErr from './../util/cookieErr';
+import { cookieErr } from '../util/pageErr';
 import { useAppSelector } from './../store/store';
 
 interface ImgDisplayItf {
@@ -63,8 +63,8 @@ const FormControl = styled(Form.Control)<SelectItf>`
 const Write = () => {
   const { state } = useLocation();
   let navigate = useNavigate();
-  let id = useAppSelector((state) => state.user.id);
-  let name = useAppSelector((state) => state.user.name);
+  let storeId = useAppSelector((state) => state.user.id);
+  let storeName = useAppSelector((state) => state.user.name);
   const [imgBase64, setImgBase64] = useState(''); // 파일 url
   const [imgFile, setImgFile] = useState({}); //파일전체 정보
   const [selectOption, setSelectOption] = useState('');
@@ -202,8 +202,8 @@ const Write = () => {
       .then((res: any) => {
         axios
           .post(process.env.REACT_APP_ip + '/board', {
-            user_id: id,
-            user_name: name,
+            user_id: storeId,
+            user_name: storeName,
             photo_name: photoName.current!.value,
             photo_date: photoDate.current!.value,
             photo_url: res,
@@ -323,7 +323,7 @@ const Write = () => {
           >
             <option value=''>필름 선택</option>
             <option value='proimage'>Kodak Proimage 100</option>
-            <option value='colorpluse'>Kodak Color Plus 200</option>
+            <option value='colorplus'>Kodak Color Plus 200</option>
             <option value='gold'>Kodak Gold 200</option>
             <option value='ultramax'>Kodak Ultra Max 400</option>
             <option value='potra'>Kodak Potra 160</option>
