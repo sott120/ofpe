@@ -237,6 +237,33 @@ app.post('/login', (req, res) => {
   });
 });
 
+//게스트 로그인한척 하기
+app.post('/login/guest', (req, res) => {
+  let id = req.body.id;
+  let name = req.body.name;
+  let guestObj = [
+    {
+      id: id,
+      name: name,
+    },
+  ];
+  const token = jwt.sign(
+    {
+      alg: 'HS256',
+      type: 'JWT',
+      id: id,
+    },
+    SECRET_KEY,
+    {
+      expiresIn: '60m', // 만료시간 60분
+    },
+  );
+  res.cookie('user', id);
+  res.cookie('name', name);
+  res.cookie('token', token, { httpOnly: true });
+  res.status(200).json(guestObj);
+});
+
 //로그아웃
 app.get('/logout', (req, res) => {
   res.clearCookie('user');
