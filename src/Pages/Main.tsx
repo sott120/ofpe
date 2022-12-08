@@ -6,9 +6,9 @@ import { useState, useRef, RefObject } from 'react';
 import { Routes, Route, Link, useNavigate, Outlet, Navigate } from 'react-router-dom';
 import Masonry from 'react-masonry-css';
 import { useEffect } from 'react';
-import cookieErr from './../util/cookieErr';
+import { cookieErr } from '../util/pageErr';
 import { useAppSelector } from './../store/store';
-
+import { ElTargetBtn, CommentBtn } from './../Components/ShowBtn';
 const breakpointColumnsObj = {
   default: 4,
   1199: 3,
@@ -182,9 +182,9 @@ const ModalFt = styled.form`
 `;
 
 const Main = () => {
-  const navigate = useNavigate();
-  let id = useAppSelector((state) => state.user.id);
-  let name = useAppSelector((state) => state.user.name);
+  // const navigate = useNavigate();
+  let storeId = useAppSelector((state) => state.user.id);
+  let storeName = useAppSelector((state) => state.user.name);
   const [getList, setGetList] = useState([
     {
       index: '',
@@ -230,27 +230,27 @@ const Main = () => {
     photo_desc: '',
   });
 
-  const postUpdate = () => {
-    navigate('/write/edit', { state: elTarget });
-  };
+  // const postUpdate = () => {
+  //   navigate('/write/edit', { state: elTarget });
+  // };
 
-  const postDelete = () => {
-    if (window.confirm('삭제하시겠습니까?') === true) {
-      axios
-        .delete(process.env.REACT_APP_ip + `/board?index=${elTarget.index}`)
-        .then((res) => {
-          console.log(res);
-          setLgShow(false);
-          alert('삭제되었습니다.');
-          getLiFunction();
-        })
-        .catch((e) => {
-          cookieErr(e.response.status);
-        });
-    } else {
-      return;
-    }
-  };
+  // const postDelete = () => {
+  //   if (window.confirm('삭제하시겠습니까?') === true) {
+  //     axios
+  //       .delete(process.env.REACT_APP_ip + `/board?index=${elTarget.index}`)
+  //       .then((res) => {
+  //         console.log(res);
+  //         setLgShow(false);
+  //         alert('삭제되었습니다.');
+  //         getLiFunction();
+  //       })
+  //       .catch((e) => {
+  //         cookieErr(e.response.status);
+  //       });
+  //   } else {
+  //     return;
+  //   }
+  // };
 
   const [lgShow, setLgShow] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -278,40 +278,40 @@ const Main = () => {
     console.log(cmtList);
   };
 
-  const cmtDelete = (cmtIndex: string, post_index: string) => {
-    if (window.confirm('댓글을 삭제하시겠습니까?') === true) {
-      axios
-        .delete(process.env.REACT_APP_ip + `/board/comment?index=${cmtIndex}`)
-        .then((res) => {
-          console.log(res);
-          alert('삭제되었습니다.');
-          getCmt(post_index);
-        })
-        .catch((e) => {
-          cookieErr(e.response.status);
-        });
-    } else {
-      return;
-    }
-  };
+  // const cmtDelete = (cmtIndex: string, post_index: string) => {
+  //   if (window.confirm('댓글을 삭제하시겠습니까?') === true) {
+  //     axios
+  //       .delete(process.env.REACT_APP_ip + `/board/comment?index=${cmtIndex}`)
+  //       .then((res) => {
+  //         console.log(res);
+  //         alert('삭제되었습니다.');
+  //         getCmt(post_index);
+  //       })
+  //       .catch((e) => {
+  //         cookieErr(e.response.status);
+  //       });
+  //   } else {
+  //     return;
+  //   }
+  // };
 
   const submitChk = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setDisabled(true);
     axios
       .post(process.env.REACT_APP_ip + '/board/comment', {
-        user_id: id,
-        user_name: name,
+        user_id: storeId,
+        user_name: storeName,
         post_index: elTarget.index,
         content: textarea.current!.value,
       })
       .then((res) => {
-        console.log(res);
         getCmt(elTarget.index);
       })
       .catch((e) => {
         cookieErr(e.response.status);
       });
-    setDisabled(true);
+    textarea.current!.value = '';
   };
 
   return (
@@ -346,10 +346,17 @@ const Main = () => {
                   </div>
                   <div className='name_ud'>
                     <p>{elTarget.create_user}</p>
-                    <div>
+                    {/* <div>
                       <span onClick={postUpdate}>수정</span>
                       <span onClick={postDelete}>삭제</span>
-                    </div>
+                    </div> */}
+                    {storeName === elTarget.create_user && (
+                      <ElTargetBtn
+                        elTarget={elTarget}
+                        setLgShow={setLgShow}
+                        getLiFunction={getLiFunction}
+                      />
+                    )}
                   </div>
                 </ModalT>
                 <ModalM>
@@ -385,14 +392,19 @@ const Main = () => {
                             <div>
                               <span>{el.date}</span>
 
-                              <span
+                              {/* <span
                                 onClick={() => {
                                   cmtDelete(el.index, el.post_index);
                                 }}
-                                className='comment_delete'
                               >
                                 삭제
-                              </span>
+                              </span> */}
+                              {storeName === el.name && (
+                                <CommentBtn
+                                  el={el}
+                                  getCmt={getCmt}
+                                />
+                              )}
                             </div>
                           </div>
                         </li>
