@@ -6,8 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCookies, Cookies } from 'react-cookie';
 import { useSelector, useDispatch } from 'react-redux';
-import { useAppDispatch } from './../store/store';
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from './../store/store';
 import { setUser } from './../store/userSlice';
+import { pageErr } from './../util/pageErr';
 
 const cookie = new Cookies();
 
@@ -75,6 +77,13 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
   const [disabled, setDisabled] = useState(false);
   const goId = useRef() as RefObject<HTMLInputElement>;
   const goPw = useRef() as RefObject<HTMLInputElement>;
+  let storeId = useAppSelector((state) => state.user.id);
+  //로그인 되어있을때 로그인페이지 막기
+  useEffect(() => {
+    pageErr(storeId);
+    storeId !== undefined && setDisabled(true);
+  }, []);
+
   const goChk = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setDisabled(true);
@@ -101,6 +110,18 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
         });
     }
     setDisabled(false);
+  };
+
+  const guest = () => {
+    axios
+      .post(process.env.REACT_APP_ip + '/login/guest', { id: 'guest', name: 'guset' })
+      .then((res) => {
+        navigate('/');
+        dispatch(setUser(res.data));
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   };
   return (
     <LoginWrap>
@@ -157,7 +178,13 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
             로그인
           </Button>
         </Form>
-        <Button variant='dark'>게스트로 로그인</Button>
+        <Button
+          variant='dark'
+          disabled={disabled}
+          onClick={guest}
+        >
+          게스트로 로그인
+        </Button>
       </LoginBox>
     </LoginWrap>
   );
