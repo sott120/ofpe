@@ -8,6 +8,10 @@ import Masonry from 'react-masonry-css';
 import { prototype } from 'stream';
 import { useAppSelector } from './../store/store';
 
+const Navwrap = styled(Navbar)`
+  min-height: 54px;
+`;
+
 const NavbarBrand = styled(Navbar.Brand)`
   cursor: pointer;
   position: relative;
@@ -30,10 +34,38 @@ const NavbarBrand = styled(Navbar.Brand)`
   }
 `;
 
+const Navbtns = styled(Nav)`
+  flex-direction: row;
+  align-items: center;
+  & Button:last-child {
+    margin-left: 16px;
+  }
+  @media screen and (max-width: 991px) {
+    font-size: 14px;
+    & Button {
+      font-size: 14px;
+    }
+    & Button:first-child {
+      color: #888;
+    }
+    & Button:last-child {
+      margin-left: 10px;
+    }
+  }
+`;
+
+const Name = styled.div`
+  color: #fff;
+  margin-right: 16px;
+  @media screen and (max-width: 767px) {
+    display: none;
+  }
+`;
+
 const NavLogo = styled.img``;
 
 const Header = () => {
-  let id = useAppSelector((state) => state.user.id);
+  let storeName = useAppSelector((state) => state.user.name);
 
   let navigate = useNavigate();
   const logOut = () => {
@@ -46,7 +78,7 @@ const Header = () => {
     }
   };
   return (
-    <Navbar
+    <Navwrap
       expand='sm'
       bg='dark'
       variant='dark'
@@ -65,10 +97,15 @@ const Header = () => {
             />
           </div>
         </NavbarBrand>
-        <Nav>
-          <Nav.Link onClick={logOut}>로그아웃</Nav.Link>
+        <Navbtns>
+          <Name>{storeName}님 반갑습니다!</Name>
           <Button
-            className='ms-3'
+            onClick={logOut}
+            variant='outline-secondary'
+          >
+            로그아웃
+          </Button>
+          <Button
             onClick={() => {
               navigate('/write');
             }}
@@ -76,9 +113,9 @@ const Header = () => {
           >
             전시하기
           </Button>
-        </Nav>
+        </Navbtns>
       </Container>
-    </Navbar>
+    </Navwrap>
   );
 };
 
