@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { cookieErr } from '../util/pageErr';
 import { useAppSelector } from './../store/store';
 import { ElTargetBtn, CommentBtn } from './../Components/ShowBtn';
+import useIntersectionObserver from './../util/scroll';
 const breakpointColumnsObj = {
   default: 4,
   1199: 3,
@@ -182,7 +183,6 @@ const ModalFt = styled.form`
 `;
 
 const Main = () => {
-  // const navigate = useNavigate();
   let storeId = useAppSelector((state) => state.user.id);
   let storeName = useAppSelector((state) => state.user.name);
   const [getList, setGetList] = useState([
@@ -230,28 +230,6 @@ const Main = () => {
     photo_desc: '',
   });
 
-  // const postUpdate = () => {
-  //   navigate('/write/edit', { state: elTarget });
-  // };
-
-  // const postDelete = () => {
-  //   if (window.confirm('삭제하시겠습니까?') === true) {
-  //     axios
-  //       .delete(process.env.REACT_APP_ip + `/board?index=${elTarget.index}`)
-  //       .then((res) => {
-  //         console.log(res);
-  //         setLgShow(false);
-  //         alert('삭제되었습니다.');
-  //         getLiFunction();
-  //       })
-  //       .catch((e) => {
-  //         cookieErr(e.response.status);
-  //       });
-  //   } else {
-  //     return;
-  //   }
-  // };
-
   const [lgShow, setLgShow] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [cmtList, setCmtList] = useState([{ index: '', post_index: '', id: '', name: '', content: '', date: '' }]);
@@ -262,9 +240,7 @@ const Main = () => {
   };
 
   // 댓글 관련 기능
-  // useEffect(() => {
 
-  // }, [cmtList]);
   const getCmt = (post_index: string) => {
     axios
       .get(process.env.REACT_APP_ip + `/board/comment?index=${post_index}`)
@@ -277,23 +253,6 @@ const Main = () => {
       });
     console.log(cmtList);
   };
-
-  // const cmtDelete = (cmtIndex: string, post_index: string) => {
-  //   if (window.confirm('댓글을 삭제하시겠습니까?') === true) {
-  //     axios
-  //       .delete(process.env.REACT_APP_ip + `/board/comment?index=${cmtIndex}`)
-  //       .then((res) => {
-  //         console.log(res);
-  //         alert('삭제되었습니다.');
-  //         getCmt(post_index);
-  //       })
-  //       .catch((e) => {
-  //         cookieErr(e.response.status);
-  //       });
-  //   } else {
-  //     return;
-  //   }
-  // };
 
   const submitChk = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -313,6 +272,13 @@ const Main = () => {
       });
     textarea.current!.value = '';
   };
+
+  // 무한스크롤 관련 코드
+  const onIntersect: IntersectionObserverCallback = ([{ isIntersecting }]) => {
+    console.log(`감지결과 : ${isIntersecting}`);
+  };
+
+  const { setTarget } = useIntersectionObserver({ onIntersect });
 
   return (
     <>
@@ -458,6 +424,7 @@ const Main = () => {
               </Figure>
             );
           })}
+          <div ref={setTarget}></div>
         </CustomMasonry>
       </Container>
     </>
