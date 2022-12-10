@@ -9,7 +9,6 @@ import { useEffect } from 'react';
 import { cookieErr } from '../util/pageErr';
 import { useAppSelector } from './../store/store';
 import { ElTargetBtn, CommentBtn } from './../Components/ShowBtn';
-import useIntersectionObserver from './../util/scroll';
 import { useInView } from 'react-intersection-observer';
 const breakpointColumnsObj = {
   default: 4,
