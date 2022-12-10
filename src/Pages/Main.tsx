@@ -10,6 +10,7 @@ import { cookieErr } from '../util/pageErr';
 import { useAppSelector } from './../store/store';
 import { ElTargetBtn, CommentBtn } from './../Components/ShowBtn';
 import useIntersectionObserver from './../util/scroll';
+import { useInView } from 'react-intersection-observer';
 const breakpointColumnsObj = {
   default: 4,
   1199: 3,
@@ -182,24 +183,32 @@ const ModalFt = styled.form`
   border: none !important;
 `;
 
+interface List {
+  index: string;
+  create_date: string;
+  create_user: string;
+  photo_url: string;
+  photo_name: string;
+  photo_date: string;
+  photo_place: string;
+  used_camera: string;
+  used_film: string;
+  other_film: string;
+  photo_desc: string;
+}
+
 const Main = () => {
+  const [ref, inView] = useInView();
   let storeId = useAppSelector((state) => state.user.id);
   let storeName = useAppSelector((state) => state.user.name);
-  const [getList, setGetList] = useState([
-    {
-      index: '',
-      create_date: '',
-      create_user: '',
-      photo_url: '',
-      photo_name: '',
-      photo_date: '',
-      photo_place: '',
-      used_camera: '',
-      used_film: '',
-      other_film: '',
-      photo_desc: '',
-    },
-  ]);
+  //게시글 전체 data state
+  const [getList, setGetList] = useState<List[]>([]);
+
+  //보이는 게시글 data만 들어있는 state
+  const [mapList, setMapList] = useState<List[]>([]);
+
+  //게시글 몇 번까지 출력했는지 저장
+  const [mapNum, setMapNum] = useState(12);
 
   useEffect(() => {
     getLiFunction();
@@ -210,6 +219,7 @@ const Main = () => {
       .get(process.env.REACT_APP_ip + '/board')
       .then((res) => {
         setGetList(res.data);
+        setMapList(res.data.slice(0, 12));
       })
       .catch((e) => {
         cookieErr(e.response.status);
@@ -274,12 +284,20 @@ const Main = () => {
   };
 
   // 무한스크롤 관련 코드
-  const onIntersect: IntersectionObserverCallback = ([{ isIntersecting }]) => {
-    console.log(`감지결과 : ${isIntersecting}`);
+  const mapAdd = () => {
+    if (mapNum < getList.length) {
+      let a = getList.slice(mapNum, mapNum + 12);
+      setMapList(mapList.concat(a));
+      setMapNum(mapNum + 12);
+      console.log(mapNum);
+    }
   };
 
-  const { setTarget } = useIntersectionObserver({ onIntersect });
-
+  useEffect(() => {
+    if (inView && mapNum < getList.length) {
+      mapAdd();
+    }
+  }, [inView]);
   return (
     <>
       <Modal
@@ -312,10 +330,6 @@ const Main = () => {
                   </div>
                   <div className='name_ud'>
                     <p>{elTarget.create_user}</p>
-                    {/* <div>
-                      <span onClick={postUpdate}>수정</span>
-                      <span onClick={postDelete}>삭제</span>
-                    </div> */}
                     {storeName === elTarget.create_user && (
                       <ElTargetBtn
                         elTarget={elTarget}
@@ -357,14 +371,6 @@ const Main = () => {
                             <p>{el.content}</p>
                             <div>
                               <span>{el.date}</span>
-
-                              {/* <span
-                                onClick={() => {
-                                  cmtDelete(el.index, el.post_index);
-                                }}
-                              >
-                                삭제
-                              </span> */}
                               {storeName === el.name && (
                                 <CommentBtn
                                   el={el}
@@ -401,12 +407,20 @@ const Main = () => {
         </Modal.Body>
       </Modal>
       <Container>
+        <button
+          onClick={() => {
+            console.log(mapList);
+            console.log(getList);
+          }}
+        >
+          버튼
+        </button>
         <CustomMasonry
           className='my-masonry-grid mt-4'
           columnClassName='my-masonry-grid_column'
           breakpointCols={breakpointColumnsObj}
         >
-          {getList.map((el, i) => {
+          {mapList.map((el, i) => {
             return (
               <Figure
                 onClick={() => {
@@ -424,7 +438,7 @@ const Main = () => {
               </Figure>
             );
           })}
-          <div ref={setTarget}></div>
+          <div ref={ref}></div>
         </CustomMasonry>
       </Container>
     </>
