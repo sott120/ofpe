@@ -114,7 +114,7 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
 
   const guest = () => {
     axios
-      .post(process.env.REACT_APP_ip + '/login/guest', { id: 'guest', name: 'guset' })
+      .post(process.env.REACT_APP_ip + '/login/guest', { id: 'guest', name: 'guest' })
       .then((res) => {
         navigate('/');
         dispatch(setUser(res.data));
