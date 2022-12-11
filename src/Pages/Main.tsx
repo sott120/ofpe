@@ -10,6 +10,9 @@ import { cookieErr } from '../util/pageErr';
 import { useAppSelector } from './../store/store';
 import { ElTargetBtn, CommentBtn } from './../Components/ShowBtn';
 import { useInView } from 'react-intersection-observer';
+import Cards from './../Components/Cards';
+import Like from './../Components/Like';
+
 const breakpointColumnsObj = {
   default: 4,
   1199: 3,
@@ -209,6 +212,7 @@ const Main = () => {
   //게시글 몇 번까지 출력했는지 저장
   const [mapNum, setMapNum] = useState(12);
 
+  // 전체게시글 가져오기
   useEffect(() => {
     getLiFunction();
   }, []);
@@ -225,6 +229,7 @@ const Main = () => {
       });
   };
 
+  // 클릭한 현재 게시글
   const [elTarget, setElTarget] = useState({
     index: '',
     create_date: '',
@@ -239,17 +244,22 @@ const Main = () => {
     photo_desc: '',
   });
 
+  // 모달창
   const [lgShow, setLgShow] = useState(false);
+
+  //버튼 active
   const [disabled, setDisabled] = useState(true);
+  // 댓글 리스트
   const [cmtList, setCmtList] = useState([{ index: '', post_index: '', id: '', name: '', content: '', date: '' }]);
+
   const comment = useRef() as RefObject<HTMLFormElement>;
+  // 댓글 작성 텍스트박스
   const textarea = useRef() as RefObject<HTMLTextAreaElement>;
   const reviewChk = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     e.target.value.length < 3 ? setDisabled(true) : setDisabled(false);
   };
 
   // 댓글 관련 기능
-
   const getCmt = (post_index: string) => {
     axios
       .get(process.env.REACT_APP_ip + `/board/comment?index=${post_index}`)
@@ -288,7 +298,6 @@ const Main = () => {
       let a = getList.slice(mapNum, mapNum + 12);
       setMapList(mapList.concat(a));
       setMapNum(mapNum + 12);
-      console.log(mapNum);
     }
   };
 
@@ -320,10 +329,12 @@ const Main = () => {
                   <div className='title_like'>
                     <div>
                       <h4>{elTarget.photo_name}</h4>
-                      <img
-                        src={'./image/star.svg'}
+                      {/* <img
+                        src={star ? star_act : star_emt}
                         alt='즐겨찾기 아이콘'
-                      />
+                        onClick={starChange}
+                      /> */}
+                      <Like index={elTarget.index} />
                     </div>
                     <p>{elTarget.create_date}</p>
                   </div>
@@ -406,20 +417,12 @@ const Main = () => {
         </Modal.Body>
       </Modal>
       <Container>
-        <button
-          onClick={() => {
-            console.log(mapList);
-            console.log(getList);
-          }}
-        >
-          버튼
-        </button>
         <CustomMasonry
           className='my-masonry-grid mt-4'
           columnClassName='my-masonry-grid_column'
           breakpointCols={breakpointColumnsObj}
         >
-          {mapList.map((el, i) => {
+          {/* {mapList.map((el, i) => {
             return (
               <Figure
                 onClick={() => {
@@ -435,6 +438,17 @@ const Main = () => {
                 />
                 <figcaption>{el.photo_date}</figcaption>
               </Figure>
+            );
+          })} */}
+          {mapList.map((el, i) => {
+            return (
+              <Cards
+                setElTarget={setElTarget}
+                getCmt={getCmt}
+                setLgShow={setLgShow}
+                key={i}
+                el={el}
+              />
             );
           })}
           <div ref={ref}></div>
