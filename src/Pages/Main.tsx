@@ -247,6 +247,9 @@ const Main = () => {
   // 모달창
   const [lgShow, setLgShow] = useState(false);
 
+  // 좋아요 별
+  const [star, setStar] = useState(false);
+
   //버튼 active
   const [disabled, setDisabled] = useState(true);
   // 댓글 리스트
@@ -329,12 +332,11 @@ const Main = () => {
                   <div className='title_like'>
                     <div>
                       <h4>{elTarget.photo_name}</h4>
-                      {/* <img
-                        src={star ? star_act : star_emt}
-                        alt='즐겨찾기 아이콘'
-                        onClick={starChange}
-                      /> */}
-                      <Like index={elTarget.index} />
+                      <Like
+                        index={elTarget.index}
+                        star={star}
+                        setStar={setStar}
+                      />
                     </div>
                     <p>{elTarget.create_date}</p>
                   </div>
@@ -448,6 +450,7 @@ const Main = () => {
                 setLgShow={setLgShow}
                 key={i}
                 el={el}
+                setStar={setStar}
               />
             );
           })}

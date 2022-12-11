@@ -1,5 +1,8 @@
+import axios from 'axios';
 import React from 'react';
 import styled from 'styled-components';
+import { useAppSelector } from '../store/store';
+import { cookieErr } from '../util/pageErr';
 
 const Figure = styled.div`
   cursor: pointer;
@@ -20,12 +23,29 @@ const Figure = styled.div`
 `;
 
 const Cards = React.memo((props: any) => {
+  let storeName = useAppSelector((state) => state.user.name);
+  const getLike = () => {
+    axios
+      .get(process.env.REACT_APP_ip + `/board/like?index=${props.el.index}&name=${storeName}`)
+      .then((res) => {
+        if (res.data.length === 1) {
+          props.setStar(true);
+        } else {
+          props.setStar(false);
+        }
+      })
+      .catch((e) => {
+        cookieErr(e.response.status);
+      });
+  };
+
   return (
     <Figure
       onClick={() => {
         props.setElTarget(props.el);
         props.getCmt(props.el.index);
         props.setLgShow(true);
+        getLike();
       }}
     >
       <img

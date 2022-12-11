@@ -157,6 +157,39 @@ app.delete('/board/comment', (req, res) => {
   });
 });
 
+// 좋아요 불러오기
+app.get('/board/like', (req, res) => {
+  let index = req.query.index;
+  let name = req.query.name;
+  console.log(index, name);
+  let showLikeQuery = 'SELECT * FROM `like` WHERE `post_index` = ? AND `name` = ?';
+  db.query(showLikeQuery, [index, name], (err, result) => {
+    console.log(err);
+    res.status(200).json(result);
+  });
+});
+
+// 좋아요 추가
+app.post('/board/like', (req, res) => {
+  let { name, post_index } = req.body;
+  let insertLikeQuery = 'INSERT INTO `like`(name,post_index) VALUES (?,?)';
+  db.query(insertLikeQuery, [name, post_index], (err, result) => {
+    console.log(err);
+    res.status(200).json('좋아요완료');
+  });
+});
+
+// 좋아요 취소
+app.delete('/board/like', (req, res) => {
+  let index = req.query.index;
+  let name = req.query.name;
+  let deleteLikeQuery = 'DELETE FROM `like` WHERE `post_index` = ? AND `name` = ?';
+  db.query(deleteLikeQuery, [index, name], (err, result) => {
+    console.log(err);
+    res.status(200).json('좋아요취소');
+  });
+});
+
 // 회원가입 아이디 중복검사
 app.post('/member/id', (req, res) => {
   let id = req.body.id;
