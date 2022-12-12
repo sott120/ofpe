@@ -8,10 +8,13 @@ import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Layout from './layout/Layout';
 import LayoutNotHeader from './layout/LayoutNotHeader';
 import Main from './Pages/Main';
-import { useAppSelector } from './store/store';
 
 function App() {
   const [act, SetAct] = useState<boolean | null>(null);
+  if (process.env.NODE_ENV === 'production') {
+    console.log = () => {};
+    console.warn = () => {};
+  }
   return (
     <>
       <GlobalStyles />
@@ -41,43 +44,6 @@ function App() {
           ></Route>
         </Route>
       </Routes>
-
-      {/* <button
-                onClick={() => {
-                  SetAct(()=> !act)
-                    axios
-                        .post("http://localhost:8080/api/test", {
-                            firstName: "Fred",
-                            lastName: "Flintstone",
-                        })
-                        .then(function (response) {
-                            console.log(response);
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
-                }}
-            >
-                TEST1
-            </button>
-            <button
-              onClick={() => {
-                SetAct(()=> !act)
-                  axios
-                      .post( ip + "/api/test", {
-                          firstName: "Fred",
-                          lastName: "Flintstone",
-                      })
-                      .then(function (response) {
-                          console.log(response);
-                      })
-                      .catch(function (error) {
-                          console.log(error);
-                      });
-              }}
-          >
-              TEST2
-            </button> */}
     </>
   );
 }
