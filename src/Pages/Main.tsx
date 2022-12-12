@@ -31,6 +31,9 @@ const CustomMasonry = styled(Masonry)`
     /* gutter size */
     background-clip: padding-box;
   }
+  & .bottom_chk {
+    font-size: 0;
+  }
 `;
 
 const Figure = styled.div`
@@ -44,6 +47,7 @@ const Figure = styled.div`
     width: 100%;
   }
   & figcaption {
+    font-family: digital;
     position: absolute;
     bottom: 20px;
     right: 20px;
@@ -137,7 +141,7 @@ const ModalM = styled.article`
     margin: 10px 0;
   }
   & > p > span {
-    font-weight: bold;
+    font-weight: 500;
     padding-right: 10px;
   }
   & > div {
@@ -163,7 +167,7 @@ const ModalCont = styled.article`
   }
   & .comment_writer {
     padding-right: 20px;
-    font-weight: bold;
+    font-weight: 500;
     flex-shrink: 0;
   }
   & .comment_cont > p {
@@ -200,7 +204,10 @@ interface List {
 }
 
 const Main = () => {
-  const [ref, inView] = useInView();
+  const { ref, inView, entry } = useInView({
+    /* Optional options */
+    rootMargin: '100px',
+  });
   let storeId = useAppSelector((state) => state.user.id);
   let storeName = useAppSelector((state) => state.user.name);
   //게시글 전체 data state
@@ -448,14 +455,18 @@ const Main = () => {
                 setElTarget={setElTarget}
                 getCmt={getCmt}
                 setLgShow={setLgShow}
+                setDisabled={setDisabled}
                 key={i}
                 el={el}
                 setStar={setStar}
               />
             );
           })}
-          <div ref={ref}></div>
         </CustomMasonry>
+        <div
+          ref={ref}
+          className='bottom_chk'
+        ></div>
       </Container>
     </>
   );
