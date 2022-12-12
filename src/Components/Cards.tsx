@@ -15,10 +15,14 @@ const Figure = styled.div`
     width: 100%;
   }
   & figcaption {
+    font-family: digital;
+    font-size: 18px;
+    letter-spacing: 2px;
     position: absolute;
     bottom: 20px;
     right: 20px;
-    color: yellow;
+    color: #ffdf27df;
+    text-shadow: 0 0 2px #ff7300, 0 0 3px #703200d3;
   }
 `;
 
@@ -45,6 +49,7 @@ const Cards = React.memo((props: any) => {
         props.setElTarget(props.el);
         props.getCmt(props.el.index);
         props.setLgShow(true);
+        props.setDisabled(true);
         getLike();
       }}
     >
