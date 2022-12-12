@@ -12,15 +12,9 @@ import { useAppSelector } from './store/store';
 
 function App() {
   const [act, SetAct] = useState<boolean | null>(null);
-  let id = useAppSelector((state) => state.user.id);
-  let name = useAppSelector((state) => state.user.name);
   return (
     <>
       <GlobalStyles />
-      {/* <Login/>
-            <Join /> */}
-      <div>{id}</div>
-      <div>{name}</div>
       <Routes>
         <Route element={<Layout />}>
           <Route
