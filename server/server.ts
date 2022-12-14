@@ -35,6 +35,7 @@ db.connect((err) => {
 // 토큰 확인 미들웨어
 app.use('/board', (req, res, next) => {
   let token = req.cookies.token;
+  console.log(req.cookies);
   if (typeof token == 'string') {
     jwt.verify(token, process.env.SECRET_KEY!, (error, decoded) => {
       if (error) {
