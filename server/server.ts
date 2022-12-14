@@ -252,7 +252,7 @@ app.post('/login', (req, res) => {
             type: 'JWT',
             id: result[0].id,
           },
-          SECRET_KEY,
+          process.env.SECRET_KEY!,
           {
             expiresIn: '60m', // 만료시간 60분
           },
@@ -286,7 +286,7 @@ app.post('/login/guest', (req, res) => {
       type: 'JWT',
       id: id,
     },
-    SECRET_KEY,
+    process.env.SECRET_KEY!,
     {
       expiresIn: '60m', // 만료시간 60분
     },
