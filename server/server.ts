@@ -305,5 +305,5 @@ app.get('/logout', (req, res) => {
 });
 
 app.listen(8080, () => {
-  console.log('열림');
+  console.log('열림ㅁ');
 });
