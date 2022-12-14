@@ -10,6 +10,9 @@ import path from 'path';
 const __dirname = path.resolve();
 dotenv.config({ path: path.join(__dirname, '.env') });
 
+console.log('토큰 확인');
+console.log(process.env.SECRET_KEY!);
+
 const app = express();
 app.use(
   cors({
