@@ -36,7 +36,7 @@ db.connect((err) => {
 app.use('/board', (req, res, next) => {
   let token = req.cookies.token;
   if (typeof token == 'string') {
-    jwt.verify(token, SECRET_KEY, (error, decoded) => {
+    jwt.verify(token, process.env.SECRET_KEY!, (error, decoded) => {
       if (error) {
         console.log('토큰이 유효하지 않음');
         res.clearCookie('user');
