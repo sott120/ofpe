@@ -93,7 +93,7 @@ const Main = () => {
 
   const getLiFunction = () => {
     axios
-      .get(process.env.REACT_APP_ip + '/board')
+      .get(process.env.REACT_APP_ip + '/api/board')
       .then((res) => {
         setGetList(res.data);
         setMapList(res.data.slice(0, 12));
