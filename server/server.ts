@@ -33,7 +33,7 @@ db.connect((err) => {
 });
 
 // 토큰 확인 미들웨어
-app.use('/board', (req, res, next) => {
+app.use('/api/board', (req, res, next) => {
   let token = req.cookies.token;
   console.log(req.cookies);
   if (typeof token == 'string') {
@@ -60,7 +60,7 @@ app.use('/board', (req, res, next) => {
 });
 
 // 전체 게시글 불러오기
-app.get('/board', (req, res) => {
+app.get('/api/board', (req, res) => {
   const showQuery = 'SELECT *FROM posting;';
   db.query(showQuery, (err, result) => {
     res.status(200).json(result.reverse());
@@ -68,7 +68,7 @@ app.get('/board', (req, res) => {
 });
 
 // 게시글 작성
-app.post('/board', (req, res) => {
+app.post('/api/board', (req, res) => {
   let {
     user_id,
     photo_name,
@@ -105,7 +105,7 @@ app.post('/board', (req, res) => {
 });
 
 // 게시글 수정
-app.put('/board', (req, res) => {
+app.put('/api/board', (req, res) => {
   let { index, photo_name, photo_date, photo_url, photo_place, used_camera, used_film, other_film, photo_desc } =
     req.body;
   let updateQuery =
@@ -121,7 +121,7 @@ app.put('/board', (req, res) => {
 });
 
 // 게시글 삭제
-app.delete('/board', (req, res) => {
+app.delete('/api/board', (req, res) => {
   let index = req.query.index;
   let deleteQuery = 'DELETE FROM posting WHERE `index` = ?';
   db.query(deleteQuery, [index], (err, result) => {
@@ -131,7 +131,7 @@ app.delete('/board', (req, res) => {
 });
 
 // 댓글 불러오기
-app.get('/board/comment', (req, res) => {
+app.get('/api/board/comment', (req, res) => {
   let post_index = req.query.index;
   console.log(post_index);
   const showQuery = 'SELECT * FROM `comment` WHERE post_index = ?';
@@ -142,7 +142,7 @@ app.get('/board/comment', (req, res) => {
 });
 
 // 댓글 작성
-app.post('/board/comment', (req, res) => {
+app.post('/api/board/comment', (req, res) => {
   let { post_index, user_id, user_name, content } = req.body;
   let cmtWriteQuery = 'INSERT INTO `comment`(post_index, id, name, content, date) VALUES (?,?,?,?,curdate())';
   db.query(cmtWriteQuery, [post_index, user_id, user_name, content], (err, result) => {
@@ -152,7 +152,7 @@ app.post('/board/comment', (req, res) => {
 });
 
 // 댓글 삭제
-app.delete('/board/comment', (req, res) => {
+app.delete('/api/board/comment', (req, res) => {
   let index = req.query.index;
   let deleteQuery = 'DELETE FROM `comment` WHERE `index` = ?';
   db.query(deleteQuery, [index], (err, result) => {
@@ -162,7 +162,7 @@ app.delete('/board/comment', (req, res) => {
 });
 
 // 좋아요 불러오기
-app.get('/board/like', (req, res) => {
+app.get('/api/board/like', (req, res) => {
   let index = req.query.index;
   let name = req.query.name;
   console.log(index, name);
@@ -174,7 +174,7 @@ app.get('/board/like', (req, res) => {
 });
 
 // 좋아요 추가
-app.post('/board/like', (req, res) => {
+app.post('/api/board/like', (req, res) => {
   let { name, post_index } = req.body;
   let insertLikeQuery = 'INSERT INTO `like`(name,post_index) VALUES (?,?)';
   db.query(insertLikeQuery, [name, post_index], (err, result) => {
@@ -184,7 +184,7 @@ app.post('/board/like', (req, res) => {
 });
 
 // 좋아요 취소
-app.delete('/board/like', (req, res) => {
+app.delete('/api/board/like', (req, res) => {
   let index = req.query.index;
   let name = req.query.name;
   let deleteLikeQuery = 'DELETE FROM `like` WHERE `post_index` = ? AND `name` = ?';
@@ -195,7 +195,7 @@ app.delete('/board/like', (req, res) => {
 });
 
 // 회원가입 아이디 중복검사
-app.post('/member/id', (req, res) => {
+app.post('/api/member/id', (req, res) => {
   let id = req.body.id;
   let idChkQuery = 'SELECT id FROM user WHERE id=?';
   db.query(idChkQuery, [id], (err, result) => {
@@ -208,7 +208,7 @@ app.post('/member/id', (req, res) => {
 });
 
 // 회원가입 아이디 중복검사
-app.post('/member/name', (req, res) => {
+app.post('/api/member/name', (req, res) => {
   let name = req.body.name;
   let nameChkQuery = 'SELECT name FROM user WHERE name=?';
   db.query(nameChkQuery, [name], (err, result) => {
@@ -221,7 +221,7 @@ app.post('/member/name', (req, res) => {
 });
 
 // 회원가입
-app.post('/member', (req, res) => {
+app.post('/api/member', (req, res) => {
   let { id, name, pw } = req.body;
   const salt = crypto.randomBytes(32).toString('hex');
   const hash = hashTest(pw);
@@ -236,7 +236,7 @@ app.post('/member', (req, res) => {
 });
 
 // 로그인 아이디 조회
-app.post('/login', (req, res) => {
+app.post('/api/login', (req, res) => {
   let id = req.body.id; //로그인 받아온 id
   let pw = req.body.pw; //로그인 받아온 pw
   let idChkQuery = 'SELECT * FROM user WHERE id=?';
@@ -275,7 +275,7 @@ app.post('/login', (req, res) => {
 });
 
 //게스트 로그인한척 하기
-app.post('/login/guest', (req, res) => {
+app.post('/api/login/guest', (req, res) => {
   let id = req.body.id;
   let name = req.body.name;
   let guestObj = [
@@ -302,12 +302,12 @@ app.post('/login/guest', (req, res) => {
 });
 
 //로그아웃
-app.get('/logout', (req, res) => {
+app.get('/api/logout', (req, res) => {
   res.clearCookie('user');
   res.clearCookie('name');
   res.clearCookie('token').end();
 });
 
 app.listen(8080, () => {
-  console.log('열림ㅁ');
+  console.log('열림');
 });

@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Button, Modal, Form } from 'react-bootstrap';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useState, useRef, RefObject } from 'react';
+import { useState, useRef, RefObject, useCallback } from 'react';
 import { Routes, Route, Link, useNavigate, Outlet, Navigate } from 'react-router-dom';
 import Masonry from 'react-masonry-css';
 import { useEffect } from 'react';
@@ -139,7 +139,7 @@ const Main = () => {
   // 댓글 관련 기능
   const getCmt = (post_index: string) => {
     axios
-      .get(process.env.REACT_APP_ip + `/board/comment?index=${post_index}`)
+      .get(process.env.REACT_APP_ip + `/api/board/comment?index=${post_index}`)
       .then((res) => {
         setCmtList(res.data);
         console.log(res.data);
@@ -149,6 +149,19 @@ const Main = () => {
       });
     console.log(cmtList);
   };
+
+  const callbackGetCmt = useCallback((post_index: string) => {
+    axios
+      .get(process.env.REACT_APP_ip + `/api/board/comment?index=${post_index}`)
+      .then((res) => {
+        setCmtList(res.data);
+        console.log(res.data);
+      })
+      .catch((e) => {
+        cookieErr(e.response.status);
+      });
+    console.log(cmtList);
+  }, []);
 
   // 무한스크롤 관련 코드
   const mapAdd = () => {
@@ -208,7 +221,8 @@ const Main = () => {
             return (
               <Cards
                 setElTarget={setElTarget}
-                getCmt={getCmt}
+                // getCmt={getCmt}
+                getCmt={callbackGetCmt}
                 setLgShow={setLgShow}
                 setDisabled={setDisabled}
                 key={i}

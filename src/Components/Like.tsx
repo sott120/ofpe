@@ -10,7 +10,7 @@ const Like = (props: { index: any; setStar: (arg0: boolean) => void; star: any }
 
   const insertLike = () => {
     axios
-      .post(process.env.REACT_APP_ip + '/board/like', {
+      .post(process.env.REACT_APP_ip + '/api/board/like', {
         name: storeName,
         post_index: props.index,
       })
@@ -25,7 +25,7 @@ const Like = (props: { index: any; setStar: (arg0: boolean) => void; star: any }
 
   const deleteLike = () => {
     axios
-      .delete(process.env.REACT_APP_ip + `/board/like?index=${props.index}&name=${storeName}`)
+      .delete(process.env.REACT_APP_ip + `/api/board/like?index=${props.index}&name=${storeName}`)
       .then((res) => {
         props.setStar(false);
       })

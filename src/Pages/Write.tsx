@@ -152,7 +152,7 @@ const Write = () => {
         uploadFile(imgFile);
       } else if (sbmitBtn.current!.innerText === '수정하기' && imgInput.current!.value === '') {
         axios
-          .put(process.env.REACT_APP_ip + '/board', {
+          .put(process.env.REACT_APP_ip + '/api/board', {
             index: state.index,
             photo_name: photoName.current!.value,
             photo_date: photoDate.current!.value,
@@ -201,7 +201,7 @@ const Write = () => {
       })
       .then((res: any) => {
         axios
-          .post(process.env.REACT_APP_ip + '/board', {
+          .post(process.env.REACT_APP_ip + '/api/board', {
             user_id: storeId,
             user_name: storeName,
             photo_name: photoName.current!.value,
@@ -239,7 +239,7 @@ const Write = () => {
       })
       .then((res: any) => {
         axios
-          .put(process.env.REACT_APP_ip + '/board', {
+          .put(process.env.REACT_APP_ip + '/api/board', {
             index: state.index,
             photo_name: photoName.current!.value,
             photo_date: photoDate.current!.value,

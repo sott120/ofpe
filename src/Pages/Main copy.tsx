@@ -231,7 +231,7 @@ const Main = () => {
 
   const getLiFunction = () => {
     axios
-      .get(process.env.REACT_APP_ip + '/board')
+      .get(process.env.REACT_APP_ip + '/api/board')
       .then((res) => {
         setGetList(res.data);
         setMapList(res.data.slice(0, 12));
@@ -277,7 +277,7 @@ const Main = () => {
   // 댓글 관련 기능
   const getCmt = (post_index: string) => {
     axios
-      .get(process.env.REACT_APP_ip + `/board/comment?index=${post_index}`)
+      .get(process.env.REACT_APP_ip + `/api/board/comment?index=${post_index}`)
       .then((res) => {
         setCmtList(res.data);
         console.log(res.data);
@@ -292,7 +292,7 @@ const Main = () => {
     e.preventDefault();
     setDisabled(true);
     axios
-      .post(process.env.REACT_APP_ip + '/board/comment', {
+      .post(process.env.REACT_APP_ip + '/api/board/comment', {
         user_id: storeId,
         user_name: storeName,
         post_index: elTarget.index,

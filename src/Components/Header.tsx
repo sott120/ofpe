@@ -70,7 +70,7 @@ const Header = () => {
   let navigate = useNavigate();
   const logOut = () => {
     if (window.confirm('로그아웃 하시겠습니까?') === true) {
-      axios.get(process.env.REACT_APP_ip + '/logout').then((res) => {
+      axios.get(process.env.REACT_APP_ip + '/api/logout').then((res) => {
         window.location.replace('/login');
       });
     } else {

@@ -15,7 +15,7 @@ const ElTargetBtn = (props: {
   const postDelete = () => {
     if (window.confirm('삭제하시겠습니까?') === true) {
       axios
-        .delete(process.env.REACT_APP_ip + `/board?index=${props.elTarget.index}`)
+        .delete(process.env.REACT_APP_ip + `/api/board?index=${props.elTarget.index}`)
         .then((res) => {
           console.log(res);
           props.setLgShow(false);
@@ -44,7 +44,7 @@ const CommentBtn = (props: {
   const cmtDelete = (cmtIndex: string, post_index: string) => {
     if (window.confirm('댓글을 삭제하시겠습니까?') === true) {
       axios
-        .delete(process.env.REACT_APP_ip + `/board/comment?index=${cmtIndex}`)
+        .delete(process.env.REACT_APP_ip + `/api/board/comment?index=${cmtIndex}`)
         .then((res) => {
           console.log(res);
           alert('삭제되었습니다.');

@@ -95,7 +95,7 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
       goPw.current!.focus();
     } else if (goId.current!.value !== '' && goPw.current!.value !== '') {
       axios
-        .post(process.env.REACT_APP_ip + '/login', { id: goId.current!.value, pw: goPw.current!.value })
+        .post(process.env.REACT_APP_ip + '/api/login', { id: goId.current!.value, pw: goPw.current!.value })
         .then((res) => {
           if (res.data == false) {
             alert('아이디 또는 비밀번호가 일치하지 않습니다.');
@@ -114,7 +114,7 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
 
   const guest = () => {
     axios
-      .post(process.env.REACT_APP_ip + '/login/guest', { id: 'guest', name: 'guest' })
+      .post(process.env.REACT_APP_ip + '/api/login/guest', { id: 'guest', name: 'guest' })
       .then((res) => {
         navigate('/');
         dispatch(setUser(res.data));
@@ -235,7 +235,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
     let copy = { ...passBtn };
     //아이디 서버로 보내서 확인하기
     axios
-      .post(process.env.REACT_APP_ip + '/member/id', { id: id })
+      .post(process.env.REACT_APP_ip + '/api/member/id', { id: id })
       .then((res) => {
         console.log(res);
         if (!idPattern.test(id) && id !== '') {
@@ -266,7 +266,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
     let copy = { ...passBtn };
     //아이디 서버로 보내서 확인하기
     axios
-      .post(process.env.REACT_APP_ip + '/member/name', { name: name })
+      .post(process.env.REACT_APP_ip + '/api/member/name', { name: name })
       .then((res) => {
         if (!namePattern.test(name) && name !== '') {
           setNameTxt(chkNameCont[1]);
@@ -346,7 +346,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
       pwchkRef.current!.focus();
     } else {
       axios
-        .post(process.env.REACT_APP_ip + '/member', { id: id, name: name, pw: pw })
+        .post(process.env.REACT_APP_ip + '/api/member', { id: id, name: name, pw: pw })
         .then((res) => {
           alert('회원가입이 완료되었습니다.');
           navigate('/login');

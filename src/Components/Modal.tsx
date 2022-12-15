@@ -181,7 +181,7 @@ const ModalCmp = ({
     e.preventDefault();
     setDisabled(true);
     axios
-      .post(process.env.REACT_APP_ip + '/board/comment', {
+      .post(process.env.REACT_APP_ip + '/api/board/comment', {
         user_id: storeId,
         user_name: storeName,
         post_index: elTarget.index,

@@ -30,7 +30,7 @@ const Cards = React.memo((props: any) => {
   let storeName = useAppSelector((state) => state.user.name);
   const getLike = () => {
     axios
-      .get(process.env.REACT_APP_ip + `/board/like?index=${props.el.index}&name=${storeName}`)
+      .get(process.env.REACT_APP_ip + `/api/board/like?index=${props.el.index}&name=${storeName}`)
       .then((res) => {
         if (res.data.length === 1) {
           props.setStar(true);
