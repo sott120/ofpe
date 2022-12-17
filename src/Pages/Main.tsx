@@ -163,7 +163,7 @@ const Main = () => {
     console.log(cmtList);
   }, []);
 
-  // 무한스크롤 관련 코드gggg
+  // 무한스크롤 관련 코드
   const mapAdd = () => {
     if (mapNum < getList.length) {
       let a = getList.slice(mapNum, mapNum + 12);

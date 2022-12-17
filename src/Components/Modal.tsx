@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Modal, Form } from 'react-bootstrap';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useState, useRef, RefObject, Key } from 'react';
@@ -8,7 +8,11 @@ import { useAppSelector } from './../store/store';
 import { ElTargetBtn, CommentBtn } from './../Components/ShowBtn';
 import Like from './../Components/Like';
 
-const Modal = styled.div``;
+const ModalBox = styled(Modal)`
+  .main_modal {
+    min-width: 900px;
+  }
+`;
 
 const ModalInner = styled.div`
   display: flex;
@@ -144,17 +148,6 @@ const ModalFt = styled.form`
   border: none !important;
 `;
 
-const ModalBg = styled.div`
-  background-color: #00000085;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 1050;
-  overflow: hidden;
-`;
-
 const ModalCmp = ({
   elTarget,
   lgShow,
@@ -197,116 +190,119 @@ const ModalCmp = ({
   };
 
   return (
-    <>
-      <ModalBg />
-      <Modal>
-        <div>
-          <ModalInner>
-            <section>
-              <img
-                src={elTarget.photo_url}
-                alt=''
-                width='100%'
-              />
-            </section>
-            <section>
-              <div>
-                <ModalT>
-                  <div className='title_like'>
-                    <div>
-                      <h4>{elTarget.photo_name}</h4>
-                      <Like
-                        index={elTarget.index}
-                        star={star}
-                        setStar={setStar}
-                      />
-                    </div>
-                    <p>{elTarget.create_date}</p>
-                  </div>
-                  <div className='name_ud'>
-                    <p>{elTarget.create_user}</p>
-                    {storeName === elTarget.create_user && (
-                      <ElTargetBtn
-                        elTarget={elTarget}
-                        setLgShow={setLgShow}
-                        getLiFunction={getLiFunction}
-                      />
-                    )}
-                  </div>
-                </ModalT>
-                <ModalM>
-                  <p>
-                    <span>촬영날짜</span>
-                    {elTarget.photo_date}
-                  </p>
-                  <p>
-                    <span>촬영장소</span>
-                    {elTarget.photo_place}
-                  </p>
-                  <p>
-                    <span>카메라</span>
-                    {elTarget.used_camera}
-                  </p>
+    <ModalBox
+      show={lgShow}
+      onHide={() => setLgShow(false)}
+      aria-labelledby='example-modal-sizes-title-lg'
+      centered
+      dialogClassName='main_modal'
+    >
+      <Modal.Body>
+        <ModalInner>
+          <section>
+            <img
+              src={elTarget.photo_url}
+              alt=''
+              width='100%'
+            />
+          </section>
+          <section>
+            <div>
+              <ModalT>
+                <div className='title_like'>
                   <div>
-                    <img
-                      src={'/image/' + elTarget.used_film + '.png'}
-                      alt='사용 필름 이미지'
+                    <h4>{elTarget.photo_name}</h4>
+                    <Like
+                      index={elTarget.index}
+                      star={star}
+                      setStar={setStar}
                     />
-                    <p>{elTarget.used_film !== 'other' ? elTarget.used_film : elTarget.other_film}</p>
                   </div>
-                </ModalM>
-                <ModalCont>
-                  <div>{elTarget.photo_desc}</div>
-                  <ul>
-                    {cmtList.map(
-                      (
-                        el: { name?: any; content?: any; date?: any; index?: string | undefined; post_index?: string },
-                        i: Key | null | undefined,
-                      ) => {
-                        return (
-                          <li key={i}>
-                            <p className='comment_writer'>{el.name}</p>
-                            <div className='comment_cont'>
-                              <p>{el.content}</p>
-                              <div>
-                                <span>{el.date}</span>
-                                {storeName === el.name && (
-                                  <CommentBtn
-                                    el={el}
-                                    getCmt={getCmt}
-                                  />
-                                )}
-                              </div>
+                  <p>{elTarget.create_date}</p>
+                </div>
+                <div className='name_ud'>
+                  <p>{elTarget.create_user}</p>
+                  {storeName === elTarget.create_user && (
+                    <ElTargetBtn
+                      elTarget={elTarget}
+                      setLgShow={setLgShow}
+                      getLiFunction={getLiFunction}
+                    />
+                  )}
+                </div>
+              </ModalT>
+              <ModalM>
+                <p>
+                  <span>촬영날짜</span>
+                  {elTarget.photo_date}
+                </p>
+                <p>
+                  <span>촬영장소</span>
+                  {elTarget.photo_place}
+                </p>
+                <p>
+                  <span>카메라</span>
+                  {elTarget.used_camera}
+                </p>
+                <div>
+                  <img
+                    src={'/image/' + elTarget.used_film + '.png'}
+                    alt='사용 필름 이미지'
+                  />
+                  <p>{elTarget.used_film !== 'other' ? elTarget.used_film : elTarget.other_film}</p>
+                </div>
+              </ModalM>
+              <ModalCont>
+                <div>{elTarget.photo_desc}</div>
+                <ul>
+                  {cmtList.map(
+                    (
+                      el: { name?: any; content?: any; date?: any; index?: string | undefined; post_index?: string },
+                      i: Key | null | undefined,
+                    ) => {
+                      return (
+                        <li key={i}>
+                          <p className='comment_writer'>{el.name}</p>
+                          <div className='comment_cont'>
+                            <p>{el.content}</p>
+                            <div>
+                              <span>{el.date}</span>
+                              {storeName === el.name && (
+                                <CommentBtn
+                                  el={el}
+                                  getCmt={getCmt}
+                                />
+                              )}
                             </div>
-                          </li>
-                        );
-                      },
-                    )}
-                  </ul>
-                </ModalCont>
-              </div>
-              <div>
-                <ModalFt ref={comment}>
-                  <FormControl
-                    ref={textarea}
-                    onChange={reviewChk}
-                    as='textarea'
-                    placeholder='댓글 달기...'
-                  ></FormControl>
-                  <Button
-                    variant='dark'
-                    onClick={submitChk}
-                    disabled={disabled}
-                  >
-                    게시
-                  </Button>
-                </ModalFt>
-              </div>
-            </section>
-          </ModalInner>
-        </div>
-      </Modal>
-    </>
+                          </div>
+                        </li>
+                      );
+                    },
+                  )}
+                </ul>
+              </ModalCont>
+            </div>
+            <div>
+              <ModalFt ref={comment}>
+                <FormControl
+                  ref={textarea}
+                  onChange={reviewChk}
+                  as='textarea'
+                  placeholder='댓글 달기...'
+                ></FormControl>
+                <Button
+                  variant='dark'
+                  onClick={submitChk}
+                  disabled={disabled}
+                >
+                  게시
+                </Button>
+              </ModalFt>
+            </div>
+          </section>
+        </ModalInner>
+      </Modal.Body>
+    </ModalBox>
   );
 };
 
