@@ -84,7 +84,7 @@ const Main = () => {
   const [mapList, setMapList] = useState<List[]>([]);
 
   //게시글 몇 번까지 출력했는지 저장
-  const [mapNum, setMapNum] = useState(12);
+  const [mapNum, setMapNum] = useState(24);
 
   // 전체게시글 가져오기
   useEffect(() => {
@@ -96,7 +96,7 @@ const Main = () => {
       .get(process.env.REACT_APP_ip + '/api/board')
       .then((res) => {
         setGetList(res.data);
-        setMapList(res.data.slice(0, 12));
+        setMapList(res.data.slice(0, 24));
       })
       .catch((e) => {
         cookieErr(e.response.status);
@@ -166,9 +166,9 @@ const Main = () => {
   // 무한스크롤 관련 코드
   const mapAdd = () => {
     if (mapNum < getList.length) {
-      let a = getList.slice(mapNum, mapNum + 12);
+      let a = getList.slice(mapNum, mapNum + 24);
       setMapList(mapList.concat(a));
-      setMapNum(mapNum + 12);
+      setMapNum(mapNum + 24);
     }
   };
 
@@ -199,24 +199,6 @@ const Main = () => {
           columnClassName='my-masonry-grid_column'
           breakpointCols={breakpointColumnsObj}
         >
-          {/* {mapList.map((el, i) => {
-            return (
-              <Figure
-                onClick={() => {
-                  setElTarget(el);
-                  getCmt(el.index);
-                  setLgShow(true);
-                }}
-                key={i}
-              >
-                <img
-                  src={el.photo_url}
-                  alt='사진'
-                />
-                <figcaption>{el.photo_date}</figcaption>
-              </Figure>
-            );
-          })} */}
           {mapList.map((el, i) => {
             return (
               <Cards
