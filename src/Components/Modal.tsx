@@ -10,7 +10,38 @@ import Like from './../Components/Like';
 
 const ModalBox = styled(Modal)`
   .main_modal {
-    min-width: 900px;
+    min-width: 1278px;
+  }
+  .modal-header {
+    display: none;
+  }
+  @media screen and (max-width: 1399px) {
+    .main_modal {
+      min-width: 1100px;
+    }
+  }
+  @media screen and (max-width: 1199px) {
+    .main_modal {
+      min-width: 918px;
+    }
+  }
+  @media screen and (max-width: 991px) {
+    .main_modal {
+      min-width: 678px;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    .main_modal {
+      min-width: 486px;
+    }
+  }
+  @media screen and (max-width: 575px) {
+    .main_modal {
+      min-width: 300px;
+    }
+    .modal-header {
+      display: flex;
+    }
   }
 `;
 
@@ -163,6 +194,9 @@ const ModalCmp = ({
   let storeId = useAppSelector((state) => state.user.id);
   let storeName = useAppSelector((state) => state.user.name);
 
+  //모달창 전체화면
+  const [fullscreen, setFullscreen] = useState('sm-down');
+
   const comment = useRef() as RefObject<HTMLFormElement>;
   // 댓글 작성 텍스트박스
   const textarea = useRef() as RefObject<HTMLTextAreaElement>;
@@ -196,9 +230,11 @@ const ModalCmp = ({
       aria-labelledby='example-modal-sizes-title-lg'
       centered
       dialogClassName='main_modal'
+      fullscreen={fullscreen}
     >
       <Modal.Body>
         <ModalInner>
+          <Modal.Header closeButton />
           <section>
             <img
               src={elTarget.photo_url}
