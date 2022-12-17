@@ -18,6 +18,29 @@ const Form2 = styled(Form)`
     font-size: 18px;
     font-weight: bold;
   }
+  & textarea {
+    height: 200px;
+    resize: none;
+  }
+`;
+
+const FormSection = styled.div`
+  display: flex;
+  & > div {
+    width: 50%;
+  }
+  & > div:first-child {
+    margin-right: 20px;
+  }
+  @media screen and (max-width: 991px) {
+    display: block;
+    & > div {
+      width: 100%;
+    }
+    & > div:first-child {
+      margin-right: 0;
+    }
+  }
 `;
 
 const ImgPreview = styled.div<ImgDisplayItf>`
@@ -29,7 +52,7 @@ const ImgPreview = styled.div<ImgDisplayItf>`
   cursor: pointer;
   @media screen and (max-width: 575px) {
     width: 100%;
-    margin: auto 10px;
+    /* margin: auto 10px; */
   }
   &::before {
     content: '';
@@ -287,68 +310,77 @@ const Write = () => {
             ref={photoName}
             type='text'
             placeholder='작품 이름'
+            maxLength={100}
           />
         </Form.Group>
-        <Form.Group className='mb-4'>
-          <Form.Label>촬영일</Form.Label>
-          <Form.Control
-            ref={photoDate}
-            type='date'
-            placeholder='촬영일'
-          />
-        </Form.Group>
-        <Form.Group className='mb-4'>
-          <Form.Label>촬영장소</Form.Label>
-          <Form.Control
-            ref={photoPlace}
-            type='text'
-            placeholder='촬영장소'
-          />
-        </Form.Group>
-        <Form.Group className='mb-4'>
-          <Form.Label>카메라 기종</Form.Label>
-          <Form.Control
-            ref={usedCamera}
-            type='text'
-            placeholder='카메라 기종'
-          />
-        </Form.Group>
-        <Form.Group className='mb-4'>
-          <Form.Label>사용한 필름</Form.Label>
-          <Form.Select
-            ref={usedFilm}
-            onChange={(e) => {
-              setSelectOption(e.currentTarget.options[e.currentTarget.selectedIndex].value);
-            }}
-          >
-            <option value=''>필름 선택</option>
-            <option value='proimage'>Kodak Proimage 100</option>
-            <option value='colorplus'>Kodak Color Plus 200</option>
-            <option value='gold'>Kodak Gold 200</option>
-            <option value='ultramax'>Kodak Ultra Max 400</option>
-            <option value='potra'>Kodak Potra 160</option>
-            <option value='potra'>Kodak Potra 400</option>
-            <option value='potra'>Kodak Potra 800</option>
-            <option value='ektar'>Kodak Ektar 100</option>
-            <option value='c200'>Fuji C200</option>
-            <option value='buam'>Buam 64</option>
-            <option value='nouvelevague'>Nouvekevague</option>
-            <option value='other'>직접 작성하기</option>
-          </Form.Select>
-          <FormControl
-            ref={otherFilm}
-            selectoption={selectOption}
-            className='mt-2'
-            type='text'
-            placeholder='필름 이름을 적어주세요'
-          />
-        </Form.Group>
+        <FormSection>
+          <Form.Group className='mb-4'>
+            <Form.Label>촬영일</Form.Label>
+            <Form.Control
+              ref={photoDate}
+              type='date'
+              placeholder='촬영일'
+            />
+          </Form.Group>
+          <Form.Group className='mb-4'>
+            <Form.Label>촬영장소</Form.Label>
+            <Form.Control
+              ref={photoPlace}
+              type='text'
+              placeholder='촬영장소'
+              maxLength={100}
+            />
+          </Form.Group>
+        </FormSection>
+        <FormSection>
+          <Form.Group className='mb-4'>
+            <Form.Label>카메라 기종</Form.Label>
+            <Form.Control
+              ref={usedCamera}
+              type='text'
+              placeholder='카메라 기종'
+              maxLength={100}
+            />
+          </Form.Group>
+          <Form.Group className='mb-4'>
+            <Form.Label>사용한 필름</Form.Label>
+            <Form.Select
+              ref={usedFilm}
+              onChange={(e) => {
+                setSelectOption(e.currentTarget.options[e.currentTarget.selectedIndex].value);
+              }}
+            >
+              <option value=''>필름 선택</option>
+              <option value='proimage'>Kodak Proimage 100</option>
+              <option value='colorplus'>Kodak Color Plus 200</option>
+              <option value='gold'>Kodak Gold 200</option>
+              <option value='ultramax'>Kodak Ultra Max 400</option>
+              <option value='potra'>Kodak Potra 160</option>
+              <option value='potra'>Kodak Potra 400</option>
+              <option value='potra'>Kodak Potra 800</option>
+              <option value='ektar'>Kodak Ektar 100</option>
+              <option value='c200'>Fuji C200</option>
+              <option value='buam'>Buam 64</option>
+              <option value='nouvelevague'>Nouvekevague</option>
+              <option value='other'>직접 작성하기</option>
+            </Form.Select>
+            <FormControl
+              ref={otherFilm}
+              selectoption={selectOption}
+              className='mt-2'
+              type='text'
+              placeholder='필름 이름을 적어주세요'
+              maxLength={100}
+            />
+          </Form.Group>
+        </FormSection>
         <Form.Group className='mb-4'>
           <Form.Label>작품 설명</Form.Label>
           <Form.Control
             ref={photoDesc}
             as='textarea'
             placeholder='작품에 대한 내용을 자유롭게 적어주세요'
+            maxLength={2000}
           />
         </Form.Group>
         <Button
