@@ -41,6 +41,9 @@ const ModalBox = styled(Modal)`
     }
     .modal-header {
       display: flex;
+      background-color: #fff;
+      position: sticky;
+      top: -16px;
     }
   }
 `;
@@ -58,7 +61,7 @@ const ModalInner = styled.div`
     flex: 6;
   }
   & section:last-child {
-    flex: 4;
+    flex: 3;
     padding-left: 10px;
     box-sizing: border-box;
     display: flex;
@@ -114,8 +117,14 @@ const ModalT = styled.article`
     font-size: 16px;
     margin: 10px 0;
   }
-  & .name_ud span {
+  & .name_ud > p:hover {
+    text-decoration: underline;
     cursor: pointer;
+    color: #333;
+  }
+  & .name_ud span:hover {
+    cursor: pointer;
+    color: #333;
   }
   & .name_ud span:first-child::after {
     content: '|';
@@ -146,6 +155,7 @@ const ModalCont = styled.article`
   min-height: 15vh;
   & > div {
     margin: 20px 0;
+    white-space: pre-line;
   }
   & ul {
     display: block;
@@ -201,7 +211,7 @@ const ModalCmp = ({
   // 댓글 작성 텍스트박스
   const textarea = useRef() as RefObject<HTMLTextAreaElement>;
   const reviewChk = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    e.target.value.length < 3 ? setDisabled(true) : setDisabled(false);
+    e.target.value.length < 2 ? setDisabled(true) : setDisabled(false);
   };
 
   const submitChk = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -325,6 +335,7 @@ const ModalCmp = ({
                   onChange={reviewChk}
                   as='textarea'
                   placeholder='댓글 달기...'
+                  maxLength={200}
                 ></FormControl>
                 <Button
                   variant='dark'
