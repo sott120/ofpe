@@ -69,6 +69,16 @@ const FormTxt = styled(Form.Text)<FormTxtItf>`
   color: #${(props) => props.color};
 `;
 
+const GuestTxt = styled.div`
+  color: #aaa;
+  word-break: keep-all;
+  & > p > span {
+    text-decoration: underline;
+    color: #fff;
+    cursor: pointer;
+  }
+`;
+
 interface StyledProps extends LoginBoxItf, FormTxtItf {}
 
 const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
@@ -181,10 +191,25 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
         <Button
           variant='dark'
           disabled={disabled}
+          className='mb-3'
           onClick={guest}
         >
           게스트로 로그인
         </Button>
+        <GuestTxt>
+          <p>게스트 로그인은 포트폴리오용으로 구현한 기능입니다.</p>
+          <p>
+            사이트를 이용하실 분들은{' '}
+            <span
+              onClick={() => {
+                navigate('/join');
+              }}
+            >
+              회원가입
+            </span>
+            해주세요.
+          </p>
+        </GuestTxt>
       </LoginBox>
     </LoginWrap>
   );
@@ -418,7 +443,7 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
             회원가입
           </Button>
         </Form>
-        <Button variant='dark'>게스트로 보기</Button>
+        {/* <Button variant='dark'>게스트로 보기</Button> */}
       </LoginBox>
     </LoginWrap>
   );
