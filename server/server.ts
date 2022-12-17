@@ -305,7 +305,8 @@ app.post('/api/login/guest', (req, res) => {
 app.get('/api/logout', (req, res) => {
   res.clearCookie('user');
   res.clearCookie('name');
-  res.clearCookie('token').end();
+  res.clearCookie('token');
+  res.status(200).json('로그아웃 성공');
 });
 
 app.listen(8080, () => {
