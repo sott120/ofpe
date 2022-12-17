@@ -233,8 +233,8 @@ const ModalCmp = ({
       fullscreen={fullscreen}
     >
       <Modal.Body>
+        <Modal.Header closeButton />
         <ModalInner>
-          <Modal.Header closeButton />
           <section>
             <img
               src={elTarget.photo_url}
