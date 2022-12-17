@@ -38,5 +38,5 @@ jobs:
           
           cd ofpe
           npx pm2 install typescript
-          npx pm2 stop server
+          npx pm2 kill
           npx pm2 start server/server.ts
