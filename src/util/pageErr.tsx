@@ -10,7 +10,7 @@ const cookieErr = (errNum: number) => {
 const pageErr = (chkId: string | undefined) => {
   if (chkId) {
     alert('이미 로그인 되어있습니다!');
-    window.history.back();
+    window.location.replace('/');
   }
 };
 
