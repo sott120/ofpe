@@ -435,24 +435,6 @@ const Main = () => {
           columnClassName='my-masonry-grid_column'
           breakpointCols={breakpointColumnsObj}
         >
-          {/* {mapList.map((el, i) => {
-            return (
-              <Figure
-                onClick={() => {
-                  setElTarget(el);
-                  getCmt(el.index);
-                  setLgShow(true);
-                }}
-                key={i}
-              >
-                <img
-                  src={el.photo_url}
-                  alt='사진'
-                />
-                <figcaption>{el.photo_date}</figcaption>
-              </Figure>
-            );
-          })} */}
           {mapList.map((el, i) => {
             return (
               <Cards

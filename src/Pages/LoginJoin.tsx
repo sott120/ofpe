@@ -443,7 +443,6 @@ const Join = ({ boxOpacity, textAlign, color }: StyledProps) => {
             회원가입
           </Button>
         </Form>
-        {/* <Button variant='dark'>게스트로 보기</Button> */}
       </LoginBox>
     </LoginWrap>
   );
