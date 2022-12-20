@@ -1,10 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import GlobalStyles from './layout/GlobalStyles';
-import axios from 'axios';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Login, Join } from './Pages/LoginJoin';
 import Write from './Pages/Write';
-import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Layout from './layout/Layout';
 import LayoutNotHeader from './layout/LayoutNotHeader';
 import Main from './Pages/Main';
@@ -15,7 +14,7 @@ import Main from './Pages/Main';
 // }
 
 function App() {
-  const [act, SetAct] = useState<boolean | null>(null);
+  // const [act, SetAct] = useState<boolean | null>(null);
   return (
     <>
       <GlobalStyles />
