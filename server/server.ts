@@ -123,7 +123,8 @@ app.put('/api/board', (req, res) => {
 // 게시글 삭제
 app.delete('/api/board', (req, res) => {
   let index = req.query.index;
-  let deleteQuery = 'DELETE FROM posting WHERE `index` = ?';
+  let deleteQuery =
+    'DELETE t1, t2, t3 FROM `posting` AS t1 LEFT JOIN `comment` AS t2 ON t1.`index` = t2.post_index LEFT JOIN `like` AS t3 ON t1.`index` = t3.post_index WHERE t1.`index` = ?';
   db.query(deleteQuery, [index], (err, result) => {
     console.log(err);
     res.status(200).json('삭제완료');
