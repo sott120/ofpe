@@ -72,7 +72,7 @@ const ModalInner = styled.div`
     width: 100%;
     height: 100%;
     object-fit: contain;
-    background-color: #ececec;
+    background-color: #f8f8f8;
   }
   & article {
     padding: 0 10px;
@@ -101,7 +101,9 @@ const ModalT = styled.article`
     display: flex;
     align-items: center;
   }
-
+  & > div > div > h4 {
+    margin-bottom: 5px;
+  }
   & img {
     width: calc(1.275rem + 0.3vw);
     height: calc(1.275rem + 0.3vw);
@@ -156,6 +158,8 @@ const ModalCont = styled.article`
   & > div {
     margin: 20px 0;
     white-space: pre-line;
+    word-break: keep-all;
+    line-height: 1.4;
   }
   & ul {
     display: block;
