@@ -38,11 +38,9 @@ __메인페이지__<br/>
 핀터레스트 레이아웃(Masonry)으로 이미지 나열 <br/>
 이미지 클릭 시 모달 형식으로 상세정보 보여주기 <br/>
 즐겨찾기 <br/>
-글 삭제 <br/>
-글 수정 <br/>
-댓글쓰기 <br/>
-댓글삭제 <br/>
- <br/>
+글 수정, 삭제 <br/>
+댓글 쓰기, 삭제 <br/>
+<br/>
  
  __글작성페이지__<br/>
 모든 input에 데이터가 있어야 api 보내기 <br/>
@@ -60,7 +58,7 @@ jpg, png만 업로드 가능 <br/>
 ## 개발 환경
 
 ### front
-![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+![HTML5]([https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB))
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
