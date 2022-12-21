@@ -293,7 +293,7 @@ app.post('/api/login/guest', (req, res) => {
     },
     process.env.SECRET_KEY!,
     {
-      expiresIn: '60m', // 만료시간 60분
+      expiresIn: '3h', // 만료시간 3시간
     },
   );
   res.cookie('user', id);
