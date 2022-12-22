@@ -75,18 +75,9 @@ const Header = () => {
   let navigate = useNavigate();
   const logOut = () => {
     if (window.confirm('로그아웃 하시겠습니까?') === true) {
-      axios
-        .get(process.env.REACT_APP_ip + '/api/logout')
-        .then((res) => {
-          //브라우저 호환성 때문에 스토어 아이디 미리 제거해주기
-          let data = { id: '', name: '' };
-          store.dispatch(replaceUser(data));
-        })
-        .then((res) => {
-          setTimeout(() => {
-            window.location.replace('/login');
-          }, 1000);
-        });
+      axios.get(process.env.REACT_APP_ip + '/api/logout').then((res) => {
+        window.location.replace('/login');
+      });
     } else {
       return;
     }

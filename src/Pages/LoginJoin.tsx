@@ -90,7 +90,7 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
   let storeId = useAppSelector((state) => state.user.id);
   //로그인 되어있을때 로그인페이지 막기
   useEffect(() => {
-    pageErr(storeId);
+    pageErr(cookie.get('name'));
     storeId !== undefined && setDisabled(true);
   }, []);
 

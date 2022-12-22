@@ -7,8 +7,8 @@ const cookieErr = (errNum: number) => {
   window.location.replace('/login');
 };
 
-const pageErr = (chkId: string | undefined) => {
-  if (chkId !== '' && chkId !== undefined) {
+const pageErr = (chkCookie: string | undefined) => {
+  if (chkCookie) {
     alert('이미 로그인 되어있습니다!');
     window.location.replace('/');
   }
