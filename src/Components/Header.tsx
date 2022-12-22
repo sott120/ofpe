@@ -7,6 +7,11 @@ import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Masonry from 'react-masonry-css';
 import { prototype } from 'stream';
 import { useAppSelector } from './../store/store';
+import { replaceUser } from './../store/userSlice';
+import { store } from './../store/store';
+import { Cookies } from 'react-cookie';
+
+const cookies = new Cookies();
 
 const Navwrap = styled(Navbar)`
   min-height: 54px;
@@ -70,9 +75,16 @@ const Header = () => {
   let navigate = useNavigate();
   const logOut = () => {
     if (window.confirm('로그아웃 하시겠습니까?') === true) {
-      axios.get(process.env.REACT_APP_ip + '/api/logout').then((res) => {
-        window.location.replace('/login');
-      });
+      axios
+        .get(process.env.REACT_APP_ip + '/api/logout')
+        .then((res) => {
+          //브라우저 호환성 때문에 스토어 아이디 미리 제거해주기
+          let data = { id: '', name: '' };
+          store.dispatch(replaceUser(data));
+        })
+        .then((res) => {
+          window.location.replace('/login');
+        });
     } else {
       return;
     }
