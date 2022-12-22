@@ -95,7 +95,11 @@ const Header = () => {
             navigate('/');
           }}
         >
-          <div>
+          <div
+            onClick={() => {
+              window.location.replace('/');
+            }}
+          >
             <img
               src={process.env.PUBLIC_URL + '/image/ofpe_logo.png'}
               alt='헤더 로고'
