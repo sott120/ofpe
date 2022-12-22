@@ -83,7 +83,9 @@ const Header = () => {
           store.dispatch(replaceUser(data));
         })
         .then((res) => {
-          window.location.replace('/login');
+          setTimeout(() => {
+            window.location.replace('/login');
+          }, 1000);
         });
     } else {
       return;
