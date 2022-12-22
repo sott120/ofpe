@@ -7,6 +7,7 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './layout/Layout';
 import LayoutNotHeader from './layout/LayoutNotHeader';
 import Main from './Pages/Main';
+import { useAppSelector } from './store/store';
 
 if (process.env.NODE_ENV === 'production') {
   console.log = () => {};
@@ -15,8 +16,12 @@ if (process.env.NODE_ENV === 'production') {
 
 function App() {
   // const [act, SetAct] = useState<boolean | null>(null);
+  let storeName = useAppSelector((state) => state.user.name);
+  let storeId = useAppSelector((state) => state.user.id);
   return (
     <>
+      <div>{storeName}</div>
+      <div>{storeId}</div>
       <GlobalStyles />
       <Routes>
         <Route element={<Layout />}>
