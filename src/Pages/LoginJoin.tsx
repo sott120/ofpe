@@ -90,7 +90,7 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
   let storeId = useAppSelector((state) => state.user.id);
   //로그인 되어있을때 로그인페이지 막기
   useEffect(() => {
-    // pageErr(cookie.get('name'));ss
+    // pageErr(cookie.get('name'));
     if (storeId) {
       console.log(storeId && storeId !== '');
       alert('이미 로그인 되어있습니다!');
