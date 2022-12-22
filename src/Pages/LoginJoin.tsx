@@ -91,7 +91,8 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
   //로그인 되어있을때 로그인페이지 막기
   useEffect(() => {
     // pageErr(cookie.get('name'));ss
-    if (storeId !== '') {
+    if (storeId) {
+      console.log(storeId && storeId !== '');
       alert('이미 로그인 되어있습니다!');
       window.location.replace('/');
     }
