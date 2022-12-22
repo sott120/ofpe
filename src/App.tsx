@@ -8,10 +8,10 @@ import Layout from './layout/Layout';
 import LayoutNotHeader from './layout/LayoutNotHeader';
 import Main from './Pages/Main';
 
-// if (process.env.NODE_ENV === 'production') {
-//   console.log = () => {};
-//   console.warn = () => {};
-// }
+if (process.env.NODE_ENV === 'production') {
+  console.log = () => {};
+  console.warn = () => {};
+}
 
 function App() {
   // const [act, SetAct] = useState<boolean | null>(null);
