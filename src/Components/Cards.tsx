@@ -26,7 +26,44 @@ const Figure = styled.div`
   }
 `;
 
-const Cards = React.memo((props: any) => {
+interface List {
+  index: string;
+  create_date: string;
+  create_user: string;
+  photo_url: string;
+  photo_name: string;
+  photo_date: string;
+  photo_place: string;
+  used_camera: string;
+  used_film: string;
+  other_film: string;
+  photo_desc: string;
+}
+
+interface CardInterface {
+  setElTarget: React.Dispatch<
+    React.SetStateAction<{
+      index: string;
+      create_date: string;
+      create_user: string;
+      photo_url: string;
+      photo_name: string;
+      photo_date: string;
+      photo_place: string;
+      used_camera: string;
+      used_film: string;
+      other_film: string;
+      photo_desc: string;
+    }>
+  >;
+  getCmt: (post_index: string) => void;
+  setDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setLgShow: React.Dispatch<React.SetStateAction<boolean>>;
+  el: List;
+  setStar: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Cards = React.memo((props: CardInterface) => {
   let storeName = useAppSelector((state) => state.user.name);
   const getLike = () => {
     axios

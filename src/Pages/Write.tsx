@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, useRef, RefObject, useEffect } from 'react';
+import { useState, useRef, RefObject, useEffect, FormEvent } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, Container } from 'react-bootstrap';
 import axios from 'axios';
@@ -89,7 +89,7 @@ const Write = () => {
   let storeId = useAppSelector((state) => state.user.id);
   let storeName = useAppSelector((state) => state.user.name);
   const [imgBase64, setImgBase64] = useState(''); // 파일 url
-  const [imgFile, setImgFile] = useState({}); //파일전체 정보
+  const [imgFile, setImgFile] = useState<File | null>(null); //파일전체 정보
   const [selectOption, setSelectOption] = useState('');
   const [disabled, setDisabled] = useState(false);
   const imgInput = useRef() as RefObject<HTMLInputElement>;
@@ -119,7 +119,8 @@ const Write = () => {
   }, []);
 
   //이미지 리사이징 후 미리보기 띄우기
-  const handleChangeFile = async (e: any) => {
+  const handleChangeFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files == null) return;
     let file = e.target.files[0];
     const fileChk = /(.*?)\.(jpg|jpeg|png)$/;
 
@@ -211,18 +212,18 @@ const Write = () => {
   };
 
   //s3전송하고 Post하는 함수
-  const uploadFile = async (file: any) => {
+  const uploadFile = async (file: File | null) => {
     console.log(file);
     console.log(config);
     const S3 = new ReactS3Client(config);
-
+    if (file == null) return;
     S3.uploadFile(file, file.name)
-      .then((data: any) => {
+      .then((data) => {
         console.log(data);
         console.log(data.location);
         return data.location;
       })
-      .then((res: any) => {
+      .then((res) => {
         axios
           .post(process.env.REACT_APP_ip + '/api/board', {
             user_id: storeId,
@@ -245,22 +246,22 @@ const Write = () => {
             cookieErr(e.response.status);
           });
       })
-      .catch((err: any) => console.error(err));
+      .catch((err) => console.error(err));
   };
 
   //s3 전송하고 Update하는 함수
-  const updateFile = async (file: any) => {
+  const updateFile = async (file: File | null) => {
     console.log(file);
     console.log(config);
     const S3 = new ReactS3Client(config);
-
+    if (file == null) return;
     S3.uploadFile(file, file.name)
-      .then((data: any) => {
+      .then((data) => {
         console.log(data);
         console.log(data.location);
         return data.location;
       })
-      .then((res: any) => {
+      .then((res) => {
         axios
           .put(process.env.REACT_APP_ip + '/api/board', {
             index: state.index,
@@ -282,7 +283,7 @@ const Write = () => {
             cookieErr(e.response.status);
           });
       })
-      .catch((err: any) => console.error(err));
+      .catch((err) => console.error(err));
   };
   return (
     <Container>
