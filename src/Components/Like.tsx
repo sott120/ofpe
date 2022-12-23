@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useState, useRef, RefObject } from 'react';
 import { cookieErr } from '../util/pageErr';
 import star_act from './../icon/star_act.svg';
 import star_emt from './../icon/star.svg';
