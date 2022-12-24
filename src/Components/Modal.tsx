@@ -77,7 +77,7 @@ const ModalInner = styled.div`
   @media screen and (max-width: 991px) {
     flex-direction: column;
     & section:first-child {
-      min-height: 0;
+      min-height: 0 !important;
     }
     & section:last-child {
       margin-top: 10px;
