@@ -53,12 +53,17 @@ const ModalInner = styled.div`
   word-break: break-all;
   @media screen and (max-width: 991px) {
     flex-direction: column;
+    & section:first-child {
+      min-height: 0;
+    }
     & section:last-child {
       margin-top: 10px;
     }
   }
   & section:first-child {
     flex: 6;
+    min-height: 622px;
+    max-height: 762px;
   }
   & section:last-child {
     flex: 3;
@@ -155,6 +160,7 @@ const ModalCont = styled.article`
   overflow: auto;
   max-height: 30vh;
   min-height: 15vh;
+  border: none !important;
   & > div {
     margin: 20px 0;
     white-space: pre-line;
@@ -185,6 +191,10 @@ const ModalCont = styled.article`
   & .comment_cont > div > span:not(:first-child) {
     cursor: pointer;
   }
+`;
+
+const ModalFtWrap = styled.div`
+  border-top: 1px solid #ececec;
 `;
 
 const ModalFt = styled.form`
@@ -332,7 +342,7 @@ const ModalCmp = ({
                 </ul>
               </ModalCont>
             </div>
-            <div>
+            <ModalFtWrap>
               <ModalFt ref={comment}>
                 <FormControl
                   ref={textarea}
@@ -349,7 +359,7 @@ const ModalCmp = ({
                   게시
                 </Button>
               </ModalFt>
-            </div>
+            </ModalFtWrap>
           </section>
         </ModalInner>
       </Modal.Body>
