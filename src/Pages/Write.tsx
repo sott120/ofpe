@@ -122,7 +122,7 @@ const Write = () => {
   const handleChangeFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files == null) return;
     let file = e.target.files[0];
-    const fileChk = /(.*?)\.(jpg|jpeg|png)$/;
+    const fileChk = /(.*?)\.(jpg|jpeg|png|JPG|JPEG|PNG)$/;
 
     if (file.name.match(fileChk)) {
       //파일 리사이징 옵션
