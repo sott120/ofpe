@@ -51,15 +51,6 @@ const ModalBox = styled(Modal)`
 const ModalInner = styled.div`
   display: flex;
   word-break: break-all;
-  @media screen and (max-width: 991px) {
-    flex-direction: column;
-    & section:first-child {
-      min-height: 0;
-    }
-    & section:last-child {
-      margin-top: 10px;
-    }
-  }
   & section:first-child {
     flex: 6;
     min-height: 622px;
@@ -82,6 +73,15 @@ const ModalInner = styled.div`
   & article {
     padding: 0 10px;
     border-bottom: 1px solid #ececec;
+  }
+  @media screen and (max-width: 991px) {
+    flex-direction: column;
+    & section:first-child {
+      min-height: 0;
+    }
+    & section:last-child {
+      margin-top: 10px;
+    }
   }
 `;
 
