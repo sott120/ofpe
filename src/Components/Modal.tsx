@@ -7,6 +7,7 @@ import { cookieErr } from '../util/pageErr';
 import { useAppSelector } from './../store/store';
 import { ElTargetBtn, CommentBtn } from './../Components/ShowBtn';
 import Like from './../Components/Like';
+import type { List, commentList } from './../Pages/Main';
 
 const ModalBox = styled(Modal)`
   .main_modal {
@@ -214,7 +215,18 @@ const ModalCmp = ({
   getCmt,
   getLiFunction,
   cmtList,
-}: any) => {
+}: {
+  elTarget: List;
+  lgShow: boolean;
+  setLgShow: React.Dispatch<React.SetStateAction<boolean>>;
+  star: boolean;
+  setStar: React.Dispatch<React.SetStateAction<boolean>>;
+  disabled: boolean;
+  setDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  getCmt: (post_index: string) => void;
+  getLiFunction: () => void;
+  cmtList: commentList[];
+}) => {
   let storeId = useAppSelector((state) => state.user.id);
   let storeName = useAppSelector((state) => state.user.name);
 
@@ -315,30 +327,25 @@ const ModalCmp = ({
               <ModalCont>
                 <div>{elTarget.photo_desc}</div>
                 <ul>
-                  {cmtList.map(
-                    (
-                      el: { name?: any; content?: any; date?: any; index?: string | undefined; post_index?: string },
-                      i: Key | null | undefined,
-                    ) => {
-                      return (
-                        <li key={i}>
-                          <p className='comment_writer'>{el.name}</p>
-                          <div className='comment_cont'>
-                            <p>{el.content}</p>
-                            <div>
-                              <span>{el.date}</span>
-                              {storeName === el.name && (
-                                <CommentBtn
-                                  el={el}
-                                  getCmt={getCmt}
-                                />
-                              )}
-                            </div>
+                  {cmtList.map((el, i) => {
+                    return (
+                      <li key={i}>
+                        <p className='comment_writer'>{el.name}</p>
+                        <div className='comment_cont'>
+                          <p>{el.content}</p>
+                          <div>
+                            <span>{el.date}</span>
+                            {storeName === el.name && (
+                              <CommentBtn
+                                el={el}
+                                getCmt={getCmt}
+                              />
+                            )}
                           </div>
-                        </li>
-                      );
-                    },
-                  )}
+                        </div>
+                      </li>
+                    );
+                  })}
                 </ul>
               </ModalCont>
             </div>

@@ -4,7 +4,7 @@ import star_act from './../icon/star_act.svg';
 import star_emt from './../icon/star.svg';
 import { useAppSelector } from '../store/store';
 
-const Like = (props: { index: any; setStar: (arg0: boolean) => void; star: any }) => {
+const Like = (props: { index: string; setStar: (arg0: boolean) => void; star: boolean }) => {
   let storeName = useAppSelector((state) => state.user.name);
 
   const insertLike = () => {

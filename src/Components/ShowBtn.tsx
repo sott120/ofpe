@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { cookieErr } from '../util/pageErr';
 
 const ElTargetBtn = (props: {
-  elTarget: { index: any };
+  elTarget: { index: string };
   setLgShow: (arg0: boolean) => void;
   getLiFunction: () => void;
 }) => {
@@ -37,10 +37,7 @@ const ElTargetBtn = (props: {
   );
 };
 
-const CommentBtn = (props: {
-  getCmt: (arg0: string) => void;
-  el: { name?: any; content?: any; date?: any; index?: any; post_index?: any };
-}) => {
+const CommentBtn = (props: { getCmt: (arg0: string) => void; el: { index: string; post_index: string } }) => {
   const cmtDelete = (cmtIndex: string, post_index: string) => {
     if (window.confirm('댓글을 삭제하시겠습니까?') === true) {
       axios

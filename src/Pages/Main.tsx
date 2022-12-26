@@ -56,7 +56,7 @@ const Figure = styled.div`
   }
 `;
 
-interface List {
+export interface List {
   index: string;
   create_date: string;
   create_user: string;
@@ -68,6 +68,15 @@ interface List {
   used_film: string;
   other_film: string;
   photo_desc: string;
+}
+
+export interface commentList {
+  index: string;
+  post_index: string;
+  id: string;
+  name: string;
+  content: string;
+  date: string;
 }
 
 const Main = () => {
@@ -104,7 +113,7 @@ const Main = () => {
   };
 
   // 클릭한 현재 게시글
-  const [elTarget, setElTarget] = useState({
+  const [elTarget, setElTarget] = useState<List>({
     index: '',
     create_date: '',
     create_user: '',
@@ -127,7 +136,7 @@ const Main = () => {
   //버튼 active
   const [disabled, setDisabled] = useState(true);
   // 댓글 리스트
-  const [cmtList, setCmtList] = useState([{ index: '', post_index: '', id: '', name: '', content: '', date: '' }]);
+  const [cmtList, setCmtList] = useState<commentList[]>([]);
 
   const comment = useRef() as RefObject<HTMLFormElement>;
   // 댓글 작성 텍스트박스
