@@ -2,13 +2,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Nav, Navbar, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useState, useRef } from 'react';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
-import Masonry from 'react-masonry-css';
-import { prototype } from 'stream';
 import { useAppSelector } from './../store/store';
-import { replaceUser } from './../store/userSlice';
-import { store } from './../store/store';
 import { Cookies } from 'react-cookie';
 
 const cookies = new Cookies();
