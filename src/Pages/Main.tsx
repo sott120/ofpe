@@ -1,17 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Button, Modal, Form } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useState, useRef, RefObject, useCallback } from 'react';
-import { Routes, Route, Link, useNavigate, Outlet, Navigate } from 'react-router-dom';
 import Masonry from 'react-masonry-css';
 import { useEffect } from 'react';
 import { cookieErr } from '../util/pageErr';
 import { useAppSelector } from './../store/store';
-import { ElTargetBtn, CommentBtn } from './../Components/ShowBtn';
 import { useInView } from 'react-intersection-observer';
 import Cards from './../Components/Cards';
-import Like from './../Components/Like';
 import ModalCmp from '../Components/Modal';
 
 const breakpointColumnsObj = {
