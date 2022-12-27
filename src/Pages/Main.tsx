@@ -197,6 +197,9 @@ const Main = () => {
           getCmt={getCmt}
           getLiFunction={getLiFunction}
           cmtList={cmtList}
+          setGetList={setGetList}
+          setMapList={setMapList}
+          setMapNum={setMapNum}
         />
       )}
       <Container>

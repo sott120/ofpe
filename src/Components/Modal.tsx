@@ -215,6 +215,9 @@ const ModalCmp = ({
   getCmt,
   getLiFunction,
   cmtList,
+  setGetList,
+  setMapList,
+  setMapNum,
 }: {
   elTarget: List;
   lgShow: boolean;
@@ -226,6 +229,9 @@ const ModalCmp = ({
   getCmt: (post_index: string) => void;
   getLiFunction: () => void;
   cmtList: commentList[];
+  setGetList: React.Dispatch<React.SetStateAction<List[]>>;
+  setMapList: React.Dispatch<React.SetStateAction<List[]>>;
+  setMapNum: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   let storeId = useAppSelector((state) => state.user.id);
   let storeName = useAppSelector((state) => state.user.name);
@@ -257,6 +263,21 @@ const ModalCmp = ({
         cookieErr(e.response.status);
       });
     textarea.current!.value = '';
+  };
+
+  //해당 작성자 글만 보기
+  const author = () => {
+    axios
+      .get(process.env.REACT_APP_ip + `/api/board/author?author=${elTarget.create_user}`)
+      .then((res) => {
+        setGetList(res.data);
+        setMapList(res.data.slice(0, 24));
+        setMapNum(24);
+        setLgShow(false);
+      })
+      .catch((e) => {
+        cookieErr(e.response.status);
+      });
   };
 
   return (
@@ -293,7 +314,7 @@ const ModalCmp = ({
                   <p>{elTarget.create_date}</p>
                 </div>
                 <div className='name_ud'>
-                  <p>{elTarget.create_user}</p>
+                  <p onClick={author}>{elTarget.create_user}</p>
                   {storeName === elTarget.create_user && (
                     <ElTargetBtn
                       elTarget={elTarget}

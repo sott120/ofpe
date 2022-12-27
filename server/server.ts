@@ -67,6 +67,17 @@ app.get('/api/board', (req, res) => {
   });
 });
 
+// 특정 작성자 게시글만 불러오기
+app.get('/api/board/author', (req, res) => {
+  let author = req.query.author;
+  console.log(author);
+  const showAQuery = 'SELECT *FROM posting where create_user = ?;';
+  db.query(showAQuery, [author], (err, result) => {
+    console.log(err);
+    res.status(200).json(result.reverse());
+  });
+});
+
 // 게시글 작성
 app.post('/api/board', (req, res) => {
   let {
