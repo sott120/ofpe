@@ -32,6 +32,11 @@ const NavbarBrand = styled(Navbar.Brand)`
     width: 100%;
     height: 100%;
   }
+  @media screen and (max-width: 767px) {
+    & div::after {
+      content: '';
+    }
+  }
 `;
 
 const Navbtns = styled(Nav)`

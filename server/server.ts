@@ -10,8 +10,8 @@ import path from 'path';
 const __dirname = path.resolve();
 dotenv.config({ path: path.join(__dirname, '.env') });
 
-console.log('토큰 확인');
-console.log(process.env.SECRET_KEY!);
+// console.log('토큰 확인');
+// console.log(process.env.SECRET_KEY!);
 
 const app = express();
 app.use(
@@ -31,6 +31,13 @@ db.connect((err) => {
     console.log('mysql 연결성공');
   }
 });
+
+//mysql connection 끊김 방지를 위해 1시간마다 쿼리를 날린다.
+setInterval(() => {
+  db.query('SELECT 1', [], (err, rows, fields) => {
+    console.log('커넥션 끊김방지 쿼리');
+  });
+}, 3600000);
 
 // 토큰 확인 미들웨어
 app.use('/api/board', (req, res, next) => {
@@ -70,9 +77,30 @@ app.get('/api/board', (req, res) => {
 // 특정 작성자 게시글만 불러오기
 app.get('/api/board/author', (req, res) => {
   let author = req.query.author;
-  console.log(author);
   const showAQuery = 'SELECT *FROM posting where create_user = ?;';
   db.query(showAQuery, [author], (err, result) => {
+    console.log(err);
+    res.status(200).json(result.reverse());
+  });
+});
+
+// 내가 쓴 게시글만 불러오기
+app.get('/api/board/my', (req, res) => {
+  let myname = req.query.my;
+  console.log(myname);
+  const showMyQuery = 'SELECT *FROM posting where create_user = ?;';
+  db.query(showMyQuery, [myname], (err, result) => {
+    console.log(err);
+    res.status(200).json(result.reverse());
+  });
+});
+
+// 좋아요 한 게시글만 불러오기
+app.get('/api/board/bookmarks', (req, res) => {
+  let myname = req.query.my;
+  console.log(myname);
+  const showBookmarkQuery = 'SELECT * FROM posting where `index` in (SELECT post_index FROM `like` WHERE name = ? );';
+  db.query(showBookmarkQuery, [myname], (err, result) => {
     console.log(err);
     res.status(200).json(result.reverse());
   });

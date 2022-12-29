@@ -92,17 +92,47 @@ const Main = () => {
   //게시글 몇 번까지 출력했는지 저장
   const [mapNum, setMapNum] = useState(24);
 
-  // 전체게시글 가져오기
+  // 페이지 접속 시 게시글 가져오기
   useEffect(() => {
     getLiFunction();
   }, []);
 
+  //전체게시글 불러오기
   const getLiFunction = () => {
     axios
       .get(process.env.REACT_APP_ip + '/api/board')
       .then((res) => {
         setGetList(res.data);
         setMapList(res.data.slice(0, 24));
+        setMapNum(24);
+      })
+      .catch((e) => {
+        cookieErr(e.response.status);
+      });
+  };
+
+  //내가 쓴 게시글만 불러오기
+  const getMyList = () => {
+    axios
+      .get(process.env.REACT_APP_ip + `/api/board/my?my=${storeName}`)
+      .then((res) => {
+        setGetList(res.data);
+        setMapList(res.data.slice(0, 24));
+        setMapNum(24);
+      })
+      .catch((e) => {
+        cookieErr(e.response.status);
+      });
+  };
+
+  //좋아요 한 게시글만 불러오기
+  const getBookmarkList = () => {
+    axios
+      .get(process.env.REACT_APP_ip + `/api/board/bookmarks?my=${storeName}`)
+      .then((res) => {
+        setGetList(res.data);
+        setMapList(res.data.slice(0, 24));
+        setMapNum(24);
       })
       .catch((e) => {
         cookieErr(e.response.status);
