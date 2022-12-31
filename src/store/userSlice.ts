@@ -1,5 +1,4 @@
-import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { createSlice } from '@reduxjs/toolkit';
 type stateType = {
   user: { id: string; name: string };
 };
