@@ -117,17 +117,23 @@ export const getList = createSlice({
         state.mapNum = 24;
         state.pageMessage = '게시글이 없습니다;(';
       })
+      .addCase(GetData.getMy.pending, (state, actions) => {
+        state.pageMessage = '로딩중...';
+      })
       .addCase(GetData.getMy.fulfilled, (state, actions) => {
         state.getList = actions.payload;
         state.mapList = actions.payload.slice(0, 24);
         state.mapNum = 24;
-        console.log(actions.payload);
+        state.pageMessage = '게시글이 없습니다;(';
+      })
+      .addCase(GetData.getBookmark.pending, (state, actions) => {
+        state.pageMessage = '로딩중...';
       })
       .addCase(GetData.getBookmark.fulfilled, (state, actions) => {
         state.getList = actions.payload;
         state.mapList = actions.payload.slice(0, 24);
         state.mapNum = 24;
-        console.log(actions.payload);
+        state.pageMessage = '게시글이 없습니다;(';
       });
   },
 });

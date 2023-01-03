@@ -73,6 +73,8 @@ const Main = () => {
   //게시글 몇 번까지 출력했는지 저장
   const mapNum = useAppSelector((state) => state.postSlice.mapNum);
 
+  const pageMessage = useAppSelector((state) => state.postSlice.pageMessage);
+
   // 페이지 접속 시 게시글 가져오기
   useEffect(() => {
     dispatch(GetData.getPost());
@@ -144,6 +146,7 @@ const Main = () => {
       dispatch(mapAdd());
     }
   }, [inView]);
+
   return (
     <>
       {lgShow && (
@@ -160,7 +163,8 @@ const Main = () => {
         />
       )}
       <Container>
-        {getList[0].index === '' ? (
+        {getList.length == 0 && <NoList />}
+        {pageMessage === '로딩중...' ? (
           <NoList />
         ) : (
           <CustomMasonry
