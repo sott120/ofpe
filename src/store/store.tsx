@@ -2,9 +2,10 @@ import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import userSlice from './userSlice';
 import postSlice from './postSlice';
+import filterNumSlice from './filterNumSlice';
 
 export const store = configureStore({
-  reducer: { userSlice, postSlice },
+  reducer: { userSlice, postSlice, filterNumSlice },
 });
 
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
