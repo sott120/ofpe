@@ -2,12 +2,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Nav, Navbar, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import axios from 'axios';
-import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
-import { useAppSelector } from './../store/store';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from './../store/store';
 import { Cookies } from 'react-cookie';
 import filter from './../icon/filter.svg';
 import filter_act from './../icon/filter_act.svg';
 import { useState } from 'react';
+import { GetData, getList } from '../store/postSlice';
 
 const cookies = new Cookies();
 
@@ -105,7 +106,8 @@ const Filter = styled.div`
 `;
 
 const Header = () => {
-  let storeName = useAppSelector((state) => state.user.name);
+  const dispatch = useAppDispatch();
+  let storeName = useAppSelector((state) => state.userSlice.user.name);
   const [filterBtn, setFilterBtn] = useState(false);
   const [filterMenu, setFilterMenu] = useState(1);
   let navigate = useNavigate();
@@ -160,7 +162,7 @@ const Header = () => {
           >
             전시하기
           </Button>
-          {/* <Filter>
+          <Filter>
             <img
               onClick={() => {
                 setFilterBtn(!filterBtn);
@@ -173,6 +175,7 @@ const Header = () => {
                 <li
                   onClick={() => {
                     setFilterMenu(1);
+                    dispatch(GetData.getPost());
                   }}
                   className={filterMenu === 1 ? 'active' : ''}
                 >
@@ -181,6 +184,7 @@ const Header = () => {
                 <li
                   onClick={() => {
                     setFilterMenu(2);
+                    dispatch(GetData.getMy(storeName));
                   }}
                   className={filterMenu === 2 ? 'active' : ''}
                 >
@@ -189,6 +193,7 @@ const Header = () => {
                 <li
                   onClick={() => {
                     setFilterMenu(3);
+                    dispatch(GetData.getBookmark(storeName));
                   }}
                   className={filterMenu === 3 ? 'active' : ''}
                 >
@@ -196,7 +201,7 @@ const Header = () => {
                 </li>
               </ul>
             )}
-          </Filter> */}
+          </Filter>
         </Navbtns>
       </Container>
     </Navwrap>
