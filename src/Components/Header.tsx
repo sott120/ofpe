@@ -7,8 +7,9 @@ import { useAppSelector, useAppDispatch } from './../store/store';
 import { Cookies } from 'react-cookie';
 import filter from './../icon/filter.svg';
 import filter_act from './../icon/filter_act.svg';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { GetData, getList } from '../store/postSlice';
+import { setNumber } from '../store/filterNumSlice';
 
 const cookies = new Cookies();
 
@@ -108,9 +109,27 @@ const Filter = styled.div`
 const Header = () => {
   const dispatch = useAppDispatch();
   let storeName = useAppSelector((state) => state.userSlice.user.name);
-  const [filterBtn, setFilterBtn] = useState(false);
-  const [filterMenu, setFilterMenu] = useState(1);
+  let filterNumber = useAppSelector((state) => state.filterNumSlice.number);
   let navigate = useNavigate();
+
+  const filterLi = useRef<HTMLUListElement>(null);
+  const filterBtnRef = useRef<HTMLImageElement>(null);
+  const [filterBtn, setFilterBtn] = useState(false);
+  const [filterWrap, setFilterWrap] = useState(false);
+
+  useEffect(() => {
+    const clickOutside = (e: any) => {
+      if (filterWrap && !filterLi.current?.contains(e.target) && !filterBtnRef.current?.contains(e.target)) {
+        setFilterBtn(false);
+        setFilterWrap(false);
+      }
+    };
+    document.addEventListener('mousedown', clickOutside);
+    return () => {
+      document.removeEventListener('mousedown', clickOutside);
+    };
+  }, [filterWrap]);
+
   const logOut = () => {
     if (window.confirm('로그아웃 하시겠습니까?') === true) {
       axios.get(process.env.REACT_APP_ip + '/api/logout').then((res) => {
@@ -164,38 +183,40 @@ const Header = () => {
           </Button>
           <Filter>
             <img
+              ref={filterBtnRef}
               onClick={() => {
                 setFilterBtn(!filterBtn);
+                setFilterWrap(!filterWrap);
               }}
               src={filterBtn ? filter_act : filter}
               alt='필터아이콘'
             />
             {filterBtn && (
-              <ul>
+              <ul ref={filterLi}>
                 <li
                   onClick={() => {
-                    setFilterMenu(1);
+                    dispatch(setNumber(1));
                     dispatch(GetData.getPost());
                   }}
-                  className={filterMenu === 1 ? 'active' : ''}
+                  className={filterNumber === 1 ? 'active' : ''}
                 >
                   전체
                 </li>
                 <li
                   onClick={() => {
-                    setFilterMenu(2);
+                    dispatch(setNumber(2));
                     dispatch(GetData.getMy(storeName));
                   }}
-                  className={filterMenu === 2 ? 'active' : ''}
+                  className={filterNumber === 2 ? 'active' : ''}
                 >
                   내가쓴글
                 </li>
                 <li
                   onClick={() => {
-                    setFilterMenu(3);
+                    dispatch(setNumber(3));
                     dispatch(GetData.getBookmark(storeName));
                   }}
-                  className={filterMenu === 3 ? 'active' : ''}
+                  className={filterNumber === 3 ? 'active' : ''}
                 >
                   즐겨찾기
                 </li>
