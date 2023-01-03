@@ -4,10 +4,11 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useState, useRef, RefObject, Key } from 'react';
 import { cookieErr } from '../util/pageErr';
-import { useAppSelector } from './../store/store';
+import { useAppSelector, useAppDispatch } from './../store/store';
 import { ElTargetBtn, CommentBtn } from './../Components/ShowBtn';
 import Like from './../Components/Like';
 import type { List, commentList } from './../Pages/Main';
+import { mapChange } from '../store/postSlice';
 
 const ModalBox = styled(Modal)`
   .main_modal {
@@ -213,11 +214,7 @@ const ModalCmp = ({
   disabled,
   setDisabled,
   getCmt,
-  getLiFunction,
   cmtList,
-  setGetList,
-  setMapList,
-  setMapNum,
 }: {
   elTarget: List;
   lgShow: boolean;
@@ -227,14 +224,11 @@ const ModalCmp = ({
   disabled: boolean;
   setDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   getCmt: (post_index: string) => void;
-  getLiFunction: () => void;
   cmtList: commentList[];
-  setGetList: React.Dispatch<React.SetStateAction<List[]>>;
-  setMapList: React.Dispatch<React.SetStateAction<List[]>>;
-  setMapNum: React.Dispatch<React.SetStateAction<number>>;
 }) => {
-  let storeId = useAppSelector((state) => state.user.id);
-  let storeName = useAppSelector((state) => state.user.name);
+  const dispatch = useAppDispatch();
+  let storeId = useAppSelector((state) => state.userSlice.user.id);
+  let storeName = useAppSelector((state) => state.userSlice.user.name);
 
   //모달창 전체화면
   const [fullscreen, setFullscreen] = useState('sm-down');
@@ -246,6 +240,7 @@ const ModalCmp = ({
     e.target.value.length < 2 ? setDisabled(true) : setDisabled(false);
   };
 
+  //댓글 보내기
   const submitChk = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setDisabled(true);
@@ -270,9 +265,7 @@ const ModalCmp = ({
     axios
       .get(process.env.REACT_APP_ip + `/api/board/author?author=${elTarget.create_user}`)
       .then((res) => {
-        setGetList(res.data);
-        setMapList(res.data.slice(0, 24));
-        setMapNum(24);
+        dispatch(mapChange(res.data));
         setLgShow(false);
       })
       .catch((e) => {
@@ -319,7 +312,6 @@ const ModalCmp = ({
                     <ElTargetBtn
                       elTarget={elTarget}
                       setLgShow={setLgShow}
-                      getLiFunction={getLiFunction}
                     />
                   )}
                 </div>

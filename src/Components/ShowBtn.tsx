@@ -1,12 +1,11 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { GetData } from '../store/postSlice';
+import { useAppDispatch } from '../store/store';
 import { cookieErr } from '../util/pageErr';
 
-const ElTargetBtn = (props: {
-  elTarget: { index: string };
-  setLgShow: (arg0: boolean) => void;
-  getLiFunction: () => void;
-}) => {
+const ElTargetBtn = (props: { elTarget: { index: string }; setLgShow: (arg0: boolean) => void }) => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const postUpdate = () => {
     navigate('/write/edit', { state: props.elTarget });
@@ -20,7 +19,7 @@ const ElTargetBtn = (props: {
           console.log(res);
           props.setLgShow(false);
           alert('삭제되었습니다.');
-          props.getLiFunction();
+          dispatch(GetData.getPost());
         })
         .catch((e) => {
           cookieErr(e.response.status);

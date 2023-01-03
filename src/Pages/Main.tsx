@@ -6,10 +6,12 @@ import { useState, useRef, RefObject, useCallback } from 'react';
 import Masonry from 'react-masonry-css';
 import { useEffect } from 'react';
 import { cookieErr } from '../util/pageErr';
-import { useAppSelector } from './../store/store';
+import { useAppSelector, useAppDispatch } from './../store/store';
 import { useInView } from 'react-intersection-observer';
 import Cards from './../Components/Cards';
 import ModalCmp from '../Components/Modal';
+import { GetData, mapAdd } from '../store/postSlice';
+import NoList from '../Components/NoList';
 
 const breakpointColumnsObj = {
   default: 4,
@@ -31,25 +33,6 @@ const CustomMasonry = styled(Masonry)`
   }
   & .bottom_chk {
     font-size: 0;
-  }
-`;
-
-const Figure = styled.div`
-  cursor: pointer;
-  border-radius: 10px;
-  overflow: hidden;
-  margin: 10px;
-  margin-bottom: 20px;
-  position: relative;
-  & img {
-    width: 100%;
-  }
-  & figcaption {
-    font-family: digital;
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    color: yellow;
   }
 `;
 
@@ -81,63 +64,19 @@ const Main = () => {
     /* Optional options */
     rootMargin: '100px',
   });
-  let storeId = useAppSelector((state) => state.user.id);
-  let storeName = useAppSelector((state) => state.user.name);
+  const dispatch = useAppDispatch();
+
   //게시글 전체 data state
-  const [getList, setGetList] = useState<List[]>([]);
-
+  const getList = useAppSelector((state) => state.postSlice.getList);
   //보이는 게시글 data만 들어있는 state
-  const [mapList, setMapList] = useState<List[]>([]);
-
+  const mapList = useAppSelector((state) => state.postSlice.mapList);
   //게시글 몇 번까지 출력했는지 저장
-  const [mapNum, setMapNum] = useState(24);
+  const mapNum = useAppSelector((state) => state.postSlice.mapNum);
 
   // 페이지 접속 시 게시글 가져오기
   useEffect(() => {
-    getLiFunction();
+    dispatch(GetData.getPost());
   }, []);
-
-  //전체게시글 불러오기
-  const getLiFunction = () => {
-    axios
-      .get(process.env.REACT_APP_ip + '/api/board')
-      .then((res) => {
-        setGetList(res.data);
-        setMapList(res.data.slice(0, 24));
-        setMapNum(24);
-      })
-      .catch((e) => {
-        cookieErr(e.response.status);
-      });
-  };
-
-  //내가 쓴 게시글만 불러오기
-  const getMyList = () => {
-    axios
-      .get(process.env.REACT_APP_ip + `/api/board/my?my=${storeName}`)
-      .then((res) => {
-        setGetList(res.data);
-        setMapList(res.data.slice(0, 24));
-        setMapNum(24);
-      })
-      .catch((e) => {
-        cookieErr(e.response.status);
-      });
-  };
-
-  //좋아요 한 게시글만 불러오기
-  const getBookmarkList = () => {
-    axios
-      .get(process.env.REACT_APP_ip + `/api/board/bookmarks?my=${storeName}`)
-      .then((res) => {
-        setGetList(res.data);
-        setMapList(res.data.slice(0, 24));
-        setMapNum(24);
-      })
-      .catch((e) => {
-        cookieErr(e.response.status);
-      });
-  };
 
   // 클릭한 현재 게시글
   const [elTarget, setElTarget] = useState<List>({
@@ -199,18 +138,10 @@ const Main = () => {
     console.log(cmtList);
   }, []);
 
-  // 무한스크롤 관련 코드
-  const mapAdd = () => {
-    if (mapNum < getList.length) {
-      let a = getList.slice(mapNum, mapNum + 24);
-      setMapList(mapList.concat(a));
-      setMapNum(mapNum + 24);
-    }
-  };
-
   useEffect(() => {
+    //무한스크롤
     if (inView && mapNum < getList.length) {
-      mapAdd();
+      dispatch(mapAdd());
     }
   }, [inView]);
   return (
@@ -225,34 +156,34 @@ const Main = () => {
           disabled={disabled}
           setDisabled={setDisabled}
           getCmt={getCmt}
-          getLiFunction={getLiFunction}
           cmtList={cmtList}
-          setGetList={setGetList}
-          setMapList={setMapList}
-          setMapNum={setMapNum}
         />
       )}
       <Container>
-        <CustomMasonry
-          className='my-masonry-grid mt-4'
-          columnClassName='my-masonry-grid_column'
-          breakpointCols={breakpointColumnsObj}
-        >
-          {mapList.map((el, i) => {
-            return (
-              <Cards
-                setElTarget={setElTarget}
-                // getCmt={getCmt}
-                getCmt={callbackGetCmt}
-                setLgShow={setLgShow}
-                setDisabled={setDisabled}
-                key={i}
-                el={el}
-                setStar={setStar}
-              />
-            );
-          })}
-        </CustomMasonry>
+        {getList[0].index === '' ? (
+          <NoList />
+        ) : (
+          <CustomMasonry
+            className='my-masonry-grid mt-4'
+            columnClassName='my-masonry-grid_column'
+            breakpointCols={breakpointColumnsObj}
+          >
+            {mapList.map((el, i) => {
+              return (
+                <Cards
+                  setElTarget={setElTarget}
+                  // getCmt={getCmt}
+                  getCmt={callbackGetCmt}
+                  setLgShow={setLgShow}
+                  setDisabled={setDisabled}
+                  key={i}
+                  el={el}
+                  setStar={setStar}
+                />
+              );
+            })}
+          </CustomMasonry>
+        )}
         <div
           ref={ref}
           className='bottom_chk'
