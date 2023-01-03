@@ -9,6 +9,7 @@ import { ElTargetBtn, CommentBtn } from './../Components/ShowBtn';
 import Like from './../Components/Like';
 import type { List, commentList } from './../Pages/Main';
 import { mapChange } from '../store/postSlice';
+import { setNumber } from '../store/filterNumSlice';
 
 const ModalBox = styled(Modal)`
   .main_modal {
@@ -266,6 +267,7 @@ const ModalCmp = ({
       .get(process.env.REACT_APP_ip + `/api/board/author?author=${elTarget.create_user}`)
       .then((res) => {
         dispatch(mapChange(res.data));
+        dispatch(setNumber(0));
         setLgShow(false);
       })
       .catch((e) => {
