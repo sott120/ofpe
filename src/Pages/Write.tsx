@@ -86,8 +86,8 @@ const FormControl = styled(Form.Control)<SelectItf>`
 const Write = () => {
   const { state } = useLocation();
   let navigate = useNavigate();
-  let storeId = useAppSelector((state) => state.user.id);
-  let storeName = useAppSelector((state) => state.user.name);
+  let storeId = useAppSelector((state) => state.userSlice.user.id);
+  let storeName = useAppSelector((state) => state.userSlice.user.name);
   const [imgBase64, setImgBase64] = useState(''); // 파일 url
   const [imgFile, setImgFile] = useState<File | null>(null); //파일전체 정보
   const [selectOption, setSelectOption] = useState('');

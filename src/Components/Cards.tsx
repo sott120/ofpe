@@ -64,7 +64,7 @@ interface CardInterface {
 }
 
 const Cards = React.memo((props: CardInterface) => {
-  let storeName = useAppSelector((state) => state.user.name);
+  let storeName = useAppSelector((state) => state.userSlice.user.name);
   const getLike = () => {
     axios
       .get(process.env.REACT_APP_ip + `/api/board/like?index=${props.el.index}&name=${storeName}`)

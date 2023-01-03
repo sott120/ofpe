@@ -86,7 +86,7 @@ const Login = ({ boxOpacity, textAlign, color }: StyledProps) => {
   const [disabled, setDisabled] = useState(false);
   const goId = useRef() as RefObject<HTMLInputElement>;
   const goPw = useRef() as RefObject<HTMLInputElement>;
-  let storeId = useAppSelector((state) => state.user.id);
+  let storeId = useAppSelector((state) => state.userSlice.user.id);
   //로그인 되어있을때 로그인페이지 막기
   useEffect(() => {
     // pageErr(cookie.get('name'));
